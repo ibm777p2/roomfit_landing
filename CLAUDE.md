@@ -78,6 +78,22 @@ Don't relitigate these without being asked:
   empty, plus user-submitted rooms on top. Same schema for both.
 - **The fit receipt is the product.** Every result shows its per-factor
   breakdown with a plain-language reason. Don't reduce it to a single number.
+- **Type: one serif moment, sans everywhere else.** EB Garamond 600 sets the
+  hero and the wordmark. Plus Jakarta Sans sets everything else — `--ui` for
+  headings, `--body` for text. JetBrains Mono (`--data`) carries scores, rents
+  and claim links. The serif is rationed on purpose: it carries a page at 44px
+  and comes apart at 17px, where the thin strokes lighten until a room title
+  stops out-ranking the grey line beneath it. **Don't extend `--display` to
+  small headings** — that's the change that looks like tidying up and quietly
+  inverts the hierarchy.
+- **A warm cream ground, with white cards.** `--paper` is `#f4f1e5`; cards stay
+  pure white so the fit receipt reads as an object on the page rather than as
+  more page. That also protects the score ramp: `--fit-mid` is amber, and an
+  amber bar on a cream ground would start sharing a family with it — on a white
+  card it doesn't. Two things move with the ground if it's ever warmed further:
+  `--ink-soft` (already darkened to `#667069` from `#6b756e` to hold 4.5:1 on
+  cream — it carries every hint, factor reason and room meta line), and the
+  amber, which needs re-checking against the new paper.
 
 ## Stretch goals — NOT commitments
 
@@ -155,8 +171,15 @@ render.yaml            backend deploy blueprint
   off, RLS verified), backend on Render (`roomfit-api.onrender.com`), frontend on
   Vercel (`roomfit-peach.vercel.app`), CORS locked to the Vercel origin. Sign up →
   match → fit receipt works end to end.
-- ✅ **UI refresh** — clean white theme + single pine-green accent, and a signed-out
-  "Welcome to roomfit" hero. Chrome only; score ramp + fit receipt unchanged.
+- ✅ **UI refresh** — single pine-green accent, circular fit gauges, slider-style
+  factor bars, and a signed-out hero. Chrome only; score ramp + fit receipt
+  unchanged.
+- ✅ **Type + ground** — EB Garamond hero and wordmark over Plus Jakarta Sans, on
+  a warm cream paper with white cards. The hero reads "Find a room that *fits*"
+  (the eyebrow already says roomfit, so the headline says what the app does),
+  and the third value prop speaks to listers, who reach this screen through a
+  claim link. The two rules that keep this working are in the locked decisions
+  above.
 - ✅ **Session B** — LIVE. Header tabs (Find a room / My listings), add/edit room
   form, my-listings with edit + inline-confirm delete, RLS-guarded write helpers
   in supabase.js. Create / edit / delete verified against the live DB.
@@ -195,3 +218,14 @@ render.yaml            backend deploy blueprint
 - Explain in short bullets, not essays.
 - Ask before large refactors or anything that changes a locked decision above.
 - When a task is done, say what changed and what's next — briefly.
+- **Open with a recap.** Start a session with a short plain summary of where
+  the project stands: what shipped last, what's live, what's still open. A few
+  lines, not a report. I should get the context without reading back through
+  the log — and if the recap is hard to write, that's the signal the status
+  section above has gone stale and needs updating first.
+- **Always end with the next action.** Every reply finishes by naming the next
+  thing to do, or the decision that's waiting on me. Don't leave it implied,
+  and don't stop at "let me know what you'd like" — if there's genuinely
+  nothing outstanding, propose the next thing worth doing and say why.
+- **Show written work before committing it.** Docs, specs and anything I'd
+  read rather than run get pasted in chat first. Commit on a yes.

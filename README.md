@@ -60,6 +60,7 @@ Row Level Security is what protects the data: signed-in users can read every lis
 | | |
 |---|---|
 | **Frontend** | React 18 · Vite 5 · plain hand-written CSS |
+| **Type & colour** | EB Garamond (hero) · Plus Jakarta Sans (everything else) · JetBrains Mono (scores, rents, claim links), on a warm cream ground with a single pine-green accent |
 | **Backend** | Python · FastAPI · Pydantic · Uvicorn |
 | **Data & auth** | Supabase — Postgres, email/password auth, Row Level Security, Storage |
 | **Deploy** | Vercel (frontend) · Render (backend) |
