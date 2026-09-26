@@ -20,8 +20,9 @@ from ranking import rank
 
 app = FastAPI(title="roomfit ranking")
 
-# Set ALLOWED_ORIGINS on Render to your Vercel URL, comma separated.
-# Falls back to open CORS for local dev.
+# ALLOWED_ORIGINS: every origin the frontend is served from, comma separated.
+# Exact match, so no trailing slash — a mismatch fails every request with a
+# CORS preflight 400. Unset, it falls back to open CORS for local dev.
 _origins = os.getenv("ALLOWED_ORIGINS", "*")
 app.add_middleware(
     CORSMiddleware,

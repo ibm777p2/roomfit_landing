@@ -67,9 +67,10 @@ reasons. ✅
 
 ## Phase 2 / Session A — Supabase, auth & deploy — LIVE
 
-Live: frontend `roomfit-peach.vercel.app`, backend `roomfit-api.onrender.com`,
-Supabase (schema + 12 seed rooms, email confirmation off, RLS verified), CORS
-locked to the Vercel origin. Step-by-step runbook: **`SESSION_A.md`**.
+Live: frontend `app.joinroomfit.com` (originally `roomfit-peach.vercel.app`,
+which still serves), backend `roomfit-api.onrender.com`, Supabase (schema + 12
+seed rooms, email confirmation off, RLS verified), CORS locked to both origins.
+Step-by-step runbook: **`SESSION_A.md`**.
 
 - [x] `supabase/01_schema.sql` — `rooms` table + Row Level Security (read all, write own)
 - [x] `supabase/02_seed_rooms.sql` — the same 12 rooms, `owner_id` null

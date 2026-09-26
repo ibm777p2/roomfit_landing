@@ -1,6 +1,6 @@
 # 🏠 RoomFit
 
-[![Live demo](https://img.shields.io/badge/demo-roomfit--peach.vercel.app-2f6f4e)](https://roomfit-peach.vercel.app)
+[![Live demo](https://img.shields.io/badge/demo-app.joinroomfit.com-2f6f4e)](https://app.joinroomfit.com)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-Vite-61dafb)](https://vitejs.dev)
 [![FastAPI](https://img.shields.io/badge/FastAPI-Python-009688)](https://fastapi.tiangolo.com)
@@ -8,7 +8,7 @@
 
 > A mobile-first **web app** that ranks rooms by how well they actually fit you — and shows the receipt to prove it.
 
-### 🔗 Live app → **[roomfit-peach.vercel.app](https://roomfit-peach.vercel.app/)**
+### 🔗 Live app → **[app.joinroomfit.com](https://app.joinroomfit.com/)**
 
 ---
 

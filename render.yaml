@@ -7,6 +7,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
     envVars:
-      # Set this to your Vercel URL once the frontend is deployed.
+      # Every origin the frontend is served from, comma separated, no trailing
+      # slash. See the domain guardrail in CLAUDE.md.
       - key: ALLOWED_ORIGINS
         sync: false

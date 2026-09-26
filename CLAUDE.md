@@ -113,6 +113,12 @@ Only touch these if everything above is done and there's time left:
   Do not import from it, vendor it, or merge the repos.
 - Prefer editing existing files over adding new ones. This codebase should stay
   small enough to read in one sitting.
+- **Adding or changing a domain touches three places, none of them code:**
+  Render `ALLOWED_ORIGINS` (comma-separated, exact match — no trailing slash, or
+  every match fails with a CORS preflight 400), Supabase Auth → URL Configuration
+  (Site URL + a `https://<domain>/**` Redirect URL), and Vercel's domain list. The
+  frontend builds claim links and reset redirects from `window.location.origin`,
+  so nothing in `src/` names a domain — keep it that way.
 
 ## Where things are
 
@@ -169,8 +175,9 @@ render.yaml            backend deploy blueprint
 - ✅ **Week 1** — ranking engine, `/rank`, React fit-receipt UI, verified end to end
 - ✅ **Session A** — LIVE. Supabase (schema + 12 seed rooms, email confirmation
   off, RLS verified), backend on Render (`roomfit-api.onrender.com`), frontend on
-  Vercel (`roomfit-peach.vercel.app`), CORS locked to the Vercel origin. Sign up →
-  match → fit receipt works end to end.
+  Vercel at **`app.joinroomfit.com`** (the old `roomfit-peach.vercel.app` still
+  serves, because claim links already sent point at it). Sign up → match → fit
+  receipt works end to end.
 - ✅ **UI refresh** — single pine-green accent, circular fit gauges, slider-style
   factor bars, and a signed-out hero. Chrome only; score ramp + fit receipt
   unchanged.
