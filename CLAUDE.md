@@ -91,9 +91,10 @@ Don't relitigate these without being asked:
   more page. That also protects the score ramp: `--fit-mid` is amber, and an
   amber bar on a cream ground would start sharing a family with it — on a white
   card it doesn't. Two things move with the ground if it's ever warmed further:
-  `--ink-soft` (already darkened to `#667069` from `#6b756e` to hold 4.5:1 on
-  cream — it carries every hint, factor reason and room meta line), and the
-  amber, which needs re-checking against the new paper.
+  `--ink-soft` (darkened to `#646d66` from `#6b756e` to hold 4.5:1 on all
+  three grounds — it carries every hint, factor reason and room meta line, and
+  `--surface` is the one it fails first, where the Sample-listing and Paused
+  tags sit), and the amber, which needs re-checking against the new paper.
 
 ## Stretch goals — NOT commitments
 

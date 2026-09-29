@@ -13,13 +13,15 @@
      the fit receipt should read as an object on the page, not as more page.
      --ink-soft is darkened from #6b756e, which measures 4.8:1 on white but only
      4.2:1 here: under AA, and it carries every hint, factor reason and room
-     meta line in the app. #667069 restores 4.5:1. If the ground is ever warmed
-     further, that token has to move again with it. */
+     meta line in the app. It has to clear 4.5:1 on all three grounds, and
+     --surface is the hardest: the Sample-listing and Paused tags put it there.
+     #646d66 measures 4.53:1 on surface, 4.73:1 on paper, 5.36:1 on card. If the
+     ground is ever warmed further, check it against --surface first. */
   --paper: #f4f1e5;
   --surface: #f1ecdb;
   --card: #ffffff;
   --ink: #191c1a;
-  --ink-soft: #667069;
+  --ink-soft: #646d66;
   --line: #e3decb;
 
   /* single accent — same value as --fit-high, so "good fit" reads everywhere */
