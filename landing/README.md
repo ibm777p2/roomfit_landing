@@ -12,7 +12,6 @@ Nothing is built yet. For now this folder is the design handoff.
 | `design-system/roomfit-design-spec.pdf` | Colours, type, shape and rules from the live app. Its values win over everything else. |
 | `DESIGN_SPEC.md` | Source of truth for copy, behaviour and data. Also holds the build plan and open decisions. |
 | `design/` | The Claude Design HTML export, as visual reference |
-| `design/screenshots/` | Section screenshots, desktop and mobile |
 
 ## Viewing the design
 
