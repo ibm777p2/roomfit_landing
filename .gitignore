@@ -8,10 +8,18 @@ venv/
 node_modules/
 dist/
 
-# env — Supabase keys land here in Week 2. Never commit these.
+# next.js (landing/)
+.next/
+
+# env — Supabase keys land here. Never commit these.
+# .env* catches every variant Vite and Next.js read (.env.production,
+# .env.development.local, …), not just .env and .env.local. The example
+# file holds only placeholders and stays tracked.
 .env
 .env.local
 *.env
+.env*
+!.env.example
 
 # os
 .DS_Store
