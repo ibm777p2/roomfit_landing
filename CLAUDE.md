@@ -121,6 +121,22 @@ Only touch these if everything above is done and there's time left:
   frontend builds claim links and reset redirects from `window.location.origin`,
   so nothing in `src/` names a domain — keep it that way.
 
+## Landing page
+
+`landing/` is the marketing page for joinroomfit.com: a separate Next.js
+project, deployed as its own Vercel project from that folder. Nothing is built
+yet; today it holds the design handoff.
+
+- **Read `landing/DESIGN_SPEC.md` before any landing work.** It is the source
+  of truth for copy, behaviour and data, and it holds the build plan and the
+  open decisions.
+- **Don't modify `frontend/` or `backend/` when working on it.** The landing
+  page links to the app at app.joinroomfit.com; it never changes it.
+- **The HTML export in `landing/design/` is visual reference only.** Match its
+  layout, spacing and illustration, but don't copy it wholesale into the
+  Next.js build: it uses fixed pixel widths and inline styles, and the spec
+  wins wherever the two disagree.
+
 ## Where things are
 
 ```
@@ -169,6 +185,7 @@ supabase/              run in numerical order
   12_descriptions.sql  rooms.description (optional, 2,000 chars), carried by claims
   undo/                one undo script per migration from 10 on
 render.yaml            backend deploy blueprint
+landing/               landing page handoff (separate Next.js project, not built yet)
 ```
 
 ## Status
