@@ -13,7 +13,6 @@ Nothing is built yet. For now this folder is the design handoff.
 | `DESIGN_SPEC.md` | Source of truth for copy, behaviour and data. Also holds the build plan and open decisions. |
 | `design/` | The Claude Design HTML export, as visual reference |
 | `design/screenshots/` | Section screenshots, desktop and mobile |
-| `assets/` | Images for the build (to come) |
 
 ## Viewing the design
 

@@ -6,7 +6,7 @@ Handoff from Claude Design to Claude Code. Read this before building any section
 
 1. **Design system** — `landing/design-system/roomfit-design-spec.pdf`. Colors, type, shape and rules, taken from the live app. Use its values exactly.
 2. **This spec** — copy, behavior, data, motion and honesty rules for the landing page.
-3. **Visual reference** — `landing/design/RoomFit_Landing_Desktop_dc.html` and `RoomFit_Landing_Mobile_dc.html`. Match layout, spacing and illustration.
+3. **Visual reference** — `landing/design/RoomFit Landing Desktop.dc.html` and `landing/design/RoomFit Landing Mobile.dc.html`. Match layout, spacing and illustration.
 
 If the HTML export disagrees with 1 or 2, **1 and 2 win**. The export uses fixed pixel widths and inline styles — rebuild it responsively; don't copy it wholesale.
 
@@ -108,7 +108,7 @@ Landing-only values seen in the export (derived, keep as tokens if used): `--pap
 
 **Layout** — desktop: everything centered; nav top; headline, subline and buttons in the sky; skyline full-width at the bottom. Mobile: text above the skyline; crop the skyline rather than shrinking it. Sun, clouds and plane are never covered by text or buttons.
 
-**Illustration:** `assets/sf-skyline-desk-1c.svg` (desktop), `assets/sf-skyline-draw.svg` (mobile).
+**Illustration:** `landing/design/assets/sf-skyline-desk-1c.svg` (desktop), `landing/design/assets/sf-skyline-draw.svg` (mobile).
 
 **Copy**
 - Nav: roomfit wordmark (left) · Try the demo · Join (right)
