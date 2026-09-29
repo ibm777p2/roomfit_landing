@@ -1,7 +1,7 @@
 # roomfit — build plan
 
-A 30-day build challenge. **Target: finished by Aug 3, 2026.** Secondary
-project: Goal = a complete end-to-end app that at least
+Started as a 30-day build challenge; now an ongoing build with no end date.
+Secondary project: Goal = a complete end-to-end app that at least
 3 real users can sign up for, add a listing, and get ranked matches.
 
 ## Locked scope decisions

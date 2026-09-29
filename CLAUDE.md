@@ -5,11 +5,11 @@ Read this first, every session.
 ## What this is
 
 A mobile-responsive web app that matches renters to rooms and shows **why**
-each room ranked where it did. Built solo as a 30-day challenge project.
+each room ranked where it did. It started as a solo 30-day challenge and is
+now an ongoing build, with no end date.
 
-**Target: finished and demoed by Aug 3, 2026.**
 **Time budget: ~3–5 focused hrs/week.** This is a secondary project. When
-something threatens the deadline, cut scope — never add hours.
+something doesn't fit the budget, cut scope — never add hours.
 
 ## Definition of done
 
