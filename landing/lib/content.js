@@ -36,7 +36,24 @@ export const ROLES = [
   { value: "both", label: "Both" },
 ];
 
-// The example receipt. Each bar takes the ramp colour of its own ratio:
+// The "how it works" demo in the receipt section: a pointer sets these
+// preferences, presses Find my fit, and these three rooms come back. The
+// scores are what the real ranking engine (backend/ranking.py) gives these
+// rooms for these preferences, so the demo never claims more than the app does.
+// Photos are from the app's own sample listings in Supabase — never real
+// users' listings.
+const PHOTOS = "https://nmmbktcqjznwdddwqxad.supabase.co/storage/v1/object/public/room-photos";
+
+export const DEMO = {
+  prefs: { budget: 1500, area: "SoMa", tidy: 3, social: 3, sleep: "late" },
+  results: [
+    { title: "SoMa private room", meta: "$1,000/mo · SoMa", score: 89, photo: `${PHOTOS}/P7.jpg` },
+    { title: "Sunny room in a Mission flat", meta: "$1,200/mo · Mission", score: 76, photo: `${PHOTOS}/P3.jpg` },
+    { title: "Quiet Sunset room", meta: "$900/mo · Sunset", score: 56, photo: `${PHOTOS}/P1.jpg` },
+  ],
+};
+
+// The example receipt — the top result above. Each bar takes the ramp colour of its own ratio:
 // 75%+ is fit-high, 50–74% fit-mid, under 50% fit-low.
 export const EXAMPLE_MATCH = {
   title: "SoMa private room",
