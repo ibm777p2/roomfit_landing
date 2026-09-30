@@ -6,7 +6,6 @@ export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.joinroomf
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://joinroomfit.com";
 
 export const CONTACT_EMAIL = "hello@joinroomfit.com";
-export const REPO_URL = "https://github.com/ninitwin4/roomfit";
 
 // The pills on the join form. "Somewhere else" catches everyone outside these,
 // so nobody is turned away for living in the wrong place.

@@ -1,4 +1,4 @@
-import { TEAM, FOUNDER_VIDEO_ID, CONTACT_EMAIL, REPO_URL } from "@/lib/content";
+import { TEAM, FOUNDER_VIDEO_ID, CONTACT_EMAIL } from "@/lib/content";
 import styles from "./Founder.module.css";
 
 // Founder note, team, and the page's closing line.
@@ -118,10 +118,6 @@ export default function Founder() {
         <span className={styles.footerLinks}>
           <a className="textlink" href={`mailto:${CONTACT_EMAIL}`}>
             {CONTACT_EMAIL}
-          </a>
-          <span aria-hidden="true">·</span>
-          <a className="textlink" href={REPO_URL} target="_blank" rel="noopener noreferrer">
-            GitHub (public repo)
           </a>
         </span>
       </footer>
