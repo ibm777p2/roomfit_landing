@@ -52,7 +52,7 @@ Decided by Vincent; flagged here so the spec and the build can be reconciled.
   the clear sky around the headline, pauses off screen, and is static under
   reduced motion. Everything else animates with CSS.
 - **Join form:** no neighbourhood dropdown — the pills are the only choice, and
-  sit above the button. A **First name** field is added. "Somewhere else" joins
+  sit above the button. A **Name** field is added. "Somewhere else" joins
   the pills. No "Opening soon" label; all pills look alike until chosen. The
   button reads **Join the waitlist**.
 - **Waitlist table:** roles are `looking` / `listing` / `both`, it has a `name`,

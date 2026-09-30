@@ -6,7 +6,7 @@ import { ROLE_EVENT } from "./JoinLink";
 import { NEIGHBORHOODS, ELSEWHERE, ROLES, SITE_URL } from "@/lib/content";
 import styles from "./Join.module.css";
 
-// The waitlist form: I'm (Looking / Listing / Both) → First name → Email →
+// The waitlist form: I'm (Looking / Listing / Both) → Name → Email →
 // neighbourhood pills → Join the waitlist. The pills sit above the button so
 // the form reads top to bottom and nobody submits before choosing.
 //
@@ -44,7 +44,7 @@ export default function Join() {
   function onSubmit(e) {
     // Quick checks in the browser; the server checks everything again.
     const next = {};
-    if (!name.trim()) next.name = "Add your first name.";
+    if (!name.trim()) next.name = "Add your name.";
     if (!EMAIL.test(email.trim())) next.email = "Enter a valid email address.";
     if (!hood) next.neighborhood = "Pick a neighborhood.";
     setClientErrors(next);
@@ -90,13 +90,13 @@ export default function Join() {
 
               <div className={styles.field}>
                 <label htmlFor="join-name" className={styles.label}>
-                  First name
+                  Name
                 </label>
                 <input
                   id="join-name"
                   name="name"
                   type="text"
-                  autoComplete="given-name"
+                  autoComplete="name"
                   maxLength={80}
                   placeholder="Alex"
                   value={name}

@@ -25,8 +25,8 @@ export async function joinWaitlist(_prev, formData) {
   }
 
   const errors = {};
-  if (!name) errors.name = "Add your first name.";
-  else if (name.length > 80) errors.name = "That's a bit long. Your first name is enough.";
+  if (!name) errors.name = "Add your name.";
+  else if (name.length > 80) errors.name = "That name is too long. Keep it under 80 characters.";
   if (!EMAIL.test(email) || email.length > 254) errors.email = "Enter a valid email address.";
   if (!ROLES.some((r) => r.value === role)) errors.role = "Choose Looking, Listing or Both.";
   if (![...NEIGHBORHOODS, ELSEWHERE].includes(neighborhood)) errors.neighborhood = "Pick a neighborhood.";

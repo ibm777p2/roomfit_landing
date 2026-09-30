@@ -4,17 +4,20 @@ import { useEffect, useRef } from "react";
 import styles from "./Sky.module.css";
 
 // The hero sky, drawn with three.js: slow-turning sun, drifting clouds, and a
-// plane that climbs and dips across the sky, leaving a dashed trail that fades.
+// plane flying a figure-eight (∞) across the whole sky — from just under the
+// nav down to the rooftops — leaving a dashed trail that fades.
 //
 // It works in CSS pixels: an orthographic camera the size of the hero, so an
 // object at (x, y) sits x px from the left and y px from the top.
 //
-// It stays out of the way of the words. It measures the nav, the headline block
-// ([data-sky-avoid]) and the skyline ([data-sky-ground]), and only animates in
-// the clear space between them:
-//   - the band above the headline and the band below the buttons, where clouds
-//     drift right across and wrap around, and the plane flies;
-//   - on wide screens, the space beside the headline, where clouds just bob.
+// It measures the nav, the headline block ([data-sky-avoid]) and the skyline
+// ([data-sky-ground]). Clouds keep to the clear sky: they drift across the
+// band above the headline and the band below the buttons, and on wide screens
+// bob beside the headline. The plane's ∞ spans the sky, so it does pass behind
+// the words where the loops cross; the text sits above the canvas.
+//
+// Every object is drawn whole (fill, then outline) in its own layer, so a
+// cloud hides whatever is behind it instead of letting outlines show through.
 //
 // Cheap on purpose: three.js loads only after the page is up, the loop pauses
 // when the hero is off screen or the tab is hidden, and with reduced motion it
@@ -49,6 +52,13 @@ const SHAPES = {
 
 const PAPER = "#f4f1e5";
 const SKETCH = "#c2bfb3";
+const TAU = Math.PI * 2;
+
+// Draw layers (renderOrder). Each sprite takes two: fill, then outline.
+const LAYER_SUN = 0;
+const LAYER_CLOUDS = 10; // each cloud gets its own pair above this
+const LAYER_TRAIL = 900;
+const LAYER_PLANE = 1000;
 
 export default function Sky() {
   const hostRef = useRef(null);
@@ -80,15 +90,21 @@ export default function Sky() {
       }
       renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
       renderer.setClearColor(0x000000, 0);
+      renderer.sortObjects = true;
       host.appendChild(renderer.domElement);
 
       const scene = new THREE.Scene();
       const camera = new THREE.OrthographicCamera(0, 1, 0, -1, -10, 10);
 
+      // All materials share one draw list (transparent, no depth), so the
+      // layer numbers above decide what covers what. Fills are fully opaque.
+      const mat = (color, opacity = 1) =>
+        new THREE.MeshBasicMaterial({ color, transparent: true, opacity, depthTest: false, depthWrite: false });
+      const fillMat = mat(PAPER);
+      const strokeMat = mat(SKETCH);
+
       // ---- shapes, parsed once from the design's own SVG paths ----
       const loader = new SVGLoader();
-      const fillMat = new THREE.MeshBasicMaterial({ color: PAPER, depthTest: false });
-      const strokeMat = new THREE.MeshBasicMaterial({ color: SKETCH, depthTest: false });
       const parsed = {};
       for (const [name, s] of Object.entries(SHAPES)) {
         const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${s.w} ${s.h}">${s.paths
@@ -105,9 +121,9 @@ export default function Sky() {
       }
 
       // One sprite: a pivot at the shape's centre, scaled to `width` CSS px,
-      // with its outline drawn `strokePx` wide whatever the scale.
+      // outline `strokePx` wide whatever the scale, drawn at `layer`.
       const owned = []; // geometries to dispose
-      function makeSprite(name, width, strokePx) {
+      function makeSprite(name, width, strokePx, layer) {
         const s = parsed[name];
         const scale = width / s.w;
         const pivot = new THREE.Group();
@@ -116,7 +132,7 @@ export default function Sky() {
         art.position.set((-s.w / 2) * scale, (s.h / 2) * scale, 0);
         if (s.fillGeo) {
           const fill = new THREE.Mesh(s.fillGeo, fillMat);
-          fill.renderOrder = 1;
+          fill.renderOrder = layer;
           art.add(fill);
         }
         const style = SVGLoader.getStrokeStyle(strokePx / scale, SKETCH, "round", "round");
@@ -126,7 +142,7 @@ export default function Sky() {
             if (!geo) continue;
             owned.push(geo);
             const line = new THREE.Mesh(geo, strokeMat);
-            line.renderOrder = 2;
+            line.renderOrder = layer + 1;
             art.add(line);
           }
         }
@@ -142,10 +158,9 @@ export default function Sky() {
       function spawnDash(x, y, angle, len, thick) {
         let d = dashes.find((it) => !it.alive);
         if (!d) {
-          if (dashes.length >= 120) return;
-          const mat = new THREE.MeshBasicMaterial({ color: SKETCH, transparent: true, depthTest: false });
-          const mesh = new THREE.Mesh(dashGeo, mat);
-          mesh.renderOrder = 0;
+          if (dashes.length >= 160) return;
+          const mesh = new THREE.Mesh(dashGeo, mat(SKETCH, 0.9));
+          mesh.renderOrder = LAYER_TRAIL;
           scene.add(mesh);
           d = { mesh, alive: false, age: 0 };
           dashes.push(d);
@@ -159,7 +174,7 @@ export default function Sky() {
         d.mesh.material.opacity = 0.9;
       }
 
-      // ---- layout: where the clear sky is ----
+      // ---- layout ----
       let W = 1;
       let H = 1;
       let world = null; // { sun, clouds[], plane }
@@ -178,6 +193,8 @@ export default function Sky() {
         return {
           W: hr.width,
           H: hr.height,
+          navBottom: nav.bottom,
+          groundTop,
           top: [nav.bottom + 8, text.top - 12],
           bottom: [text.bottom + 16, groundTop - 6],
           text,
@@ -193,6 +210,37 @@ export default function Sky() {
           d.alive = false;
           d.mesh.visible = false;
         }
+      }
+
+      // The plane's path: a horizontal figure-eight (lemniscate of Gerono),
+      // sampled once and walked by distance so the speed is steady everywhere.
+      function buildFlightPath(cx, cy, A, B) {
+        const N = 900;
+        const pts = [];
+        const cum = [0];
+        for (let i = 0; i <= N; i++) {
+          const t = (i / N) * TAU;
+          pts.push({ x: cx + A * Math.cos(t), y: cy + B * Math.sin(2 * t) });
+          if (i > 0) {
+            const a = pts[i - 1];
+            const b = pts[i];
+            cum.push(cum[i - 1] + Math.hypot(b.x - a.x, b.y - a.y));
+          }
+        }
+        const length = cum[N];
+        const at = (s) => {
+          s = ((s % length) + length) % length;
+          let lo = 0;
+          let hi = N;
+          while (hi - lo > 1) {
+            const mid = (lo + hi) >> 1;
+            if (cum[mid] <= s) lo = mid;
+            else hi = mid;
+          }
+          const f = (s - cum[lo]) / (cum[hi] - cum[lo] || 1);
+          return { x: pts[lo].x + (pts[hi].x - pts[lo].x) * f, y: pts[lo].y + (pts[hi].y - pts[lo].y) * f };
+        };
+        return { length, at };
       }
 
       function build() {
@@ -212,17 +260,18 @@ export default function Sky() {
         const wide = W >= 1024;
         const laneH = (l) => Math.max(0, l[1] - l[0]);
         const clouds = [];
+        let layer = LAYER_CLOUDS;
 
         // Drifting clouds, right across the clear bands, wrapping at the edges.
         const drift = (lane, frac, width, speed, startX) => {
           if (laneH(lane) < width * 0.4 + 10) return;
-          const pivot = makeSprite("cloud", width, 1.3);
+          const pivot = makeSprite("cloud", width, 1.3, (layer += 2));
           scene.add(pivot);
           clouds.push({ pivot, kind: "drift", w: width, speed, x: startX, y: lane[0] + laneH(lane) * frac });
         };
         // Clouds that bob in place beside the headline (wide screens only).
         const bob = (x, y, width, period, phase) => {
-          const pivot = makeSprite("cloud", width, 1.25);
+          const pivot = makeSprite("cloud", width, 1.25, (layer += 2));
           scene.add(pivot);
           clouds.push({ pivot, kind: "bob", w: width, bx: x, by: y, amp: 26 + width * 0.25, period, phase });
         };
@@ -248,36 +297,36 @@ export default function Sky() {
           drift(m.bottom, 0.55, 70, 6, W * 0.62);
         }
 
-        // Sun: centred in the top band.
+        // Sun: centred in the top band, behind everything.
         let sun = null;
         if (laneH(m.top) >= 44) {
           const size = wide ? 56 : 48;
-          sun = makeSprite("sun", size, 1.3);
-          sun.position.set(W / 2, -(m.top[0] + laneH(m.top) * 0.5), -1);
+          sun = makeSprite("sun", size, 1.3, LAYER_SUN);
+          sun.position.set(W / 2, -(m.top[0] + laneH(m.top) * 0.5), 0);
           scene.add(sun);
         }
 
-        // Plane: flies whichever clear band is taller (the top one on desktop,
-        // the one above the skyline on phones, as in the design).
-        const lane = laneH(m.top) >= laneH(m.bottom) ? m.top : m.bottom;
+        // Plane: a ∞ from just under the nav down to the rooftops.
         const planeW = wide ? 56 : 44;
+        const highY = m.navBottom + (wide ? 24 : 18);
+        const lowY = m.groundTop + (wide ? 40 : 28);
+        const path = buildFlightPath(W / 2, (highY + lowY) / 2, W * (wide ? 0.4 : 0.38), (lowY - highY) / 2);
+        // Start partway down the left loop, already facing the way it flies
+        // (starting at a tip would catch it mid-turn).
+        const s0 = path.length * 0.62;
+        const startDir = path.at(s0 + 6).x >= path.at(s0 - 6).x ? 1 : -1;
         const plane = {
-          pivot: makeSprite("plane", planeW, 1.2),
+          pivot: makeSprite("plane", planeW, 1.2, LAYER_PLANE),
           w: planeW,
-          lane,
-          mid: lane[0] + laneH(lane) * 0.5,
-          amp: Math.max(4, Math.min(laneH(lane) * 0.32, 38)),
-          speed: Math.max(28, W / 25), // ~25s to cross a desktop screen
-          x: W * (wide ? 0.16 : 0.13),
-          y: 0,
-          phase: 0,
-          wait: 0,
+          path,
+          s: s0,
+          speed: wide ? 95 : 60, // px per second along the curve
+          dir: startDir, // 1 = nose right, -1 = nose left; eased so the plane banks round
           dist: 0,
           dashLen: wide ? 7 : 6,
           dashThick: wide ? 1.5 : 1.3,
           gap: wide ? 13 : 11,
         };
-        plane.pivot.position.z = 1;
         scene.add(plane.pivot);
 
         world = { sun, clouds, plane };
@@ -285,11 +334,6 @@ export default function Sky() {
 
       // ---- animation ----
       let t = 0;
-      const TAU = Math.PI * 2;
-
-      function planeY(p, time) {
-        return p.mid + p.amp * Math.sin(TAU * (time / 7.5) + p.phase) + p.amp * 0.22 * Math.sin(TAU * (time / 3.1) + p.phase * 2);
-      }
 
       function step(dt) {
         t += dt;
@@ -308,36 +352,34 @@ export default function Sky() {
           }
         }
 
-        if (p.wait > 0) {
-          p.wait -= dt;
-          p.pivot.visible = false;
-        } else {
-          p.pivot.visible = true;
-          const px = p.x;
-          const py = p.y || planeY(p, t);
-          p.x += p.speed * dt;
-          p.y = planeY(p, t);
-          const dx = p.x - px;
-          const dy = p.y - py;
-          const heading = Math.atan2(dy, dx);
-          p.pivot.position.set(p.x, -p.y, 1);
-          p.pivot.rotation.z = -Math.max(-0.4, Math.min(0.4, heading));
+        // Plane: move along the ∞, face the way it's heading.
+        const before = p.path.at(p.s);
+        p.s += p.speed * dt;
+        const pos = p.path.at(p.s);
+        const ahead = p.path.at(p.s + 6);
+        const behind = p.path.at(p.s - 6);
+        const tx = ahead.x - behind.x;
+        const ty = ahead.y - behind.y;
+        const heading = Math.atan2(ty, tx); // screen angle, y down
 
-          // Drop a dash every `gap` px travelled, just behind the tail.
-          p.dist += Math.hypot(dx, dy);
-          while (p.dist >= p.gap) {
-            p.dist -= p.gap;
-            const tx = p.x - Math.cos(heading) * p.w * 0.55;
-            const ty = p.y - Math.sin(heading) * p.w * 0.55 + p.w * 0.05;
-            spawnDash(tx, ty, heading, p.dashLen, p.dashThick);
-          }
+        const targetDir = tx >= 0 ? 1 : -1;
+        p.dir += (targetDir - p.dir) * Math.min(1, dt * 5);
+        const tilt = Math.max(-1.1, Math.min(1.1, Math.atan2(ty, Math.abs(tx))));
+        p.pivot.scale.x = Math.abs(p.dir) < 0.08 ? 0.08 * Math.sign(p.dir || 1) : p.dir;
+        p.pivot.rotation.z = targetDir > 0 ? -tilt : tilt;
+        p.pivot.position.set(pos.x, -pos.y, 0);
 
-          if (p.x - p.w > W) {
-            p.x = -p.w;
-            p.y = 0;
-            p.wait = 2.5 + Math.random() * 2;
-            p.phase = Math.random() * TAU;
-          }
+        // Drop a dash every `gap` px travelled, just behind the tail.
+        p.dist += Math.hypot(pos.x - before.x, pos.y - before.y);
+        while (p.dist >= p.gap) {
+          p.dist -= p.gap;
+          spawnDash(
+            pos.x - Math.cos(heading) * p.w * 0.55,
+            pos.y - Math.sin(heading) * p.w * 0.55,
+            heading,
+            p.dashLen,
+            p.dashThick
+          );
         }
 
         for (const d of dashes) {
