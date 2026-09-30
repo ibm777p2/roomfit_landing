@@ -1,0 +1,306 @@
+.hero {
+  position: relative;
+  min-height: 844px;
+  overflow: hidden;
+  background: var(--paper);
+  isolation: isolate;
+}
+
+/* ---------- nav + copy ---------- */
+
+.nav {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 16px 22px 20px;
+}
+
+.wordmark {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.content {
+  position: relative;
+  z-index: 3;
+  padding: 96px 24px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.copy {
+  width: 100%;
+  max-width: 640px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 44px;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.title em {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.sub {
+  margin-top: 16px;
+  font-size: 16px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.sub span {
+  display: block;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+  width: 100%;
+}
+
+.primary {
+  width: 100%;
+  max-width: 300px;
+}
+
+.demo {
+  padding: 10px 0;
+  font-size: 16px;
+}
+
+/* ---------- skyline ---------- */
+
+.ground {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 300px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* the drawing's ground line, carried on past the ends of the image on wide
+   screens so the city sits on one continuous horizon */
+.ground::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1.5px;
+  background: #b6b3a8;
+}
+
+/* Mobile: crop the skyline rather than shrink it, as the design does. */
+.skylineMobile {
+  position: absolute;
+  bottom: 0;
+  left: calc(50% - 219px);
+  width: 818px;
+  max-width: none;
+  height: 300px;
+}
+
+.skylineDesktop {
+  display: none;
+}
+
+/* ---------- static sky (fallback, and first paint) ---------- */
+
+.staticSky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  transition: opacity 600ms ease;
+}
+
+/* <Sky/> sets data-sky="live" once three.js has drawn its first frame */
+.hero[data-sky="live"] .staticSky {
+  opacity: 0;
+}
+
+.sun,
+.cloud,
+.plane {
+  position: absolute;
+}
+
+.sun {
+  left: calc(50% - 24px);
+  top: 98px;
+  width: 48px;
+  height: 48px;
+}
+
+.cloud {
+  aspect-ratio: 70 / 26;
+  height: auto;
+}
+
+.cloudA {
+  left: 6%;
+  top: 126px;
+  width: 58px;
+}
+
+.cloudB {
+  right: 12%;
+  top: 164px;
+  width: 38px;
+}
+
+.cloudC {
+  right: 15%;
+  top: 530px;
+  width: 70px;
+}
+
+.cloudD {
+  display: none;
+}
+
+.plane {
+  left: 13%;
+  top: 500px;
+  width: 44px;
+  height: 20px;
+  transform: rotate(-6deg);
+}
+
+/* ---------- tablet ---------- */
+
+@media (min-width: 640px) {
+  .hero {
+    min-height: 880px;
+  }
+
+  .nav {
+    padding: 28px var(--gutter);
+  }
+
+  .content {
+    padding-top: 128px;
+  }
+
+  .title {
+    font-size: 60px;
+  }
+
+  .sub {
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .sub span {
+    white-space: nowrap;
+  }
+
+  .ground {
+    height: auto;
+    aspect-ratio: 1440 / 400;
+    max-height: 440px;
+  }
+
+  .skylineMobile {
+    display: none;
+  }
+
+  .skylineDesktop {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    max-width: 1600px;
+    height: auto;
+  }
+
+  .sun {
+    left: calc(50% - 28px);
+    top: 120px;
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* ---------- desktop ---------- */
+
+@media (min-width: 1024px) {
+  .hero {
+    min-height: 960px;
+  }
+
+  .content {
+    padding-top: 160px;
+  }
+
+  .title {
+    font-size: 72px;
+    line-height: 1.06;
+    letter-spacing: -0.015em;
+  }
+
+  .actions {
+    margin-top: 32px;
+  }
+
+  .sun {
+    top: 148px;
+  }
+
+  .cloudA {
+    left: 21%;
+    top: 320px;
+    width: 96px;
+  }
+
+  .cloudB {
+    left: 12%;
+    right: auto;
+    top: 420px;
+    width: 60px;
+  }
+
+  .cloudC {
+    left: 74%;
+    right: auto;
+    top: 280px;
+    width: 108px;
+  }
+
+  .cloudD {
+    display: block;
+    left: 86%;
+    top: 390px;
+    width: 56px;
+  }
+
+  .plane {
+    left: 16%;
+    top: 176px;
+    width: 56px;
+    height: 26px;
+  }
+}

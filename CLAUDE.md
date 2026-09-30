@@ -124,8 +124,10 @@ Only touch these if everything above is done and there's time left:
 ## Landing page
 
 `landing/` is the marketing page for joinroomfit.com: a separate Next.js
-project, deployed as its own Vercel project from that folder. Nothing is built
-yet; today it holds the design handoff.
+project (plain CSS modules, three.js for the hero sky only), deployed as its
+own Vercel project from that folder. Its waitlist lives in the same Supabase
+project (`supabase/13_waitlist.sql`). `landing/README.md` covers running,
+deploying, and where the build departs from the spec.
 
 - **Read `landing/DESIGN_SPEC.md` before any landing work.** It is the source
   of truth for copy, behaviour and data, and it holds the build plan and the
@@ -183,9 +185,10 @@ supabase/              run in numerical order
   10_roles.sql         profiles.role + trigger so nobody promotes themselves
   11_claims.sql        rooms.active, room_sources, claim_links + claim functions
   12_descriptions.sql  rooms.description (optional, 2,000 chars), carried by claims
+  13_waitlist.sql      landing-page waitlist + join_waitlist() (closed table)
   undo/                one undo script per migration from 10 on
 render.yaml            backend deploy blueprint
-landing/               landing page handoff (separate Next.js project, not built yet)
+landing/               landing page (separate Next.js project + its design handoff)
 ```
 
 ## Status

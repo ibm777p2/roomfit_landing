@@ -1,0 +1,197 @@
+/* roomfit landing — design tokens.
+   Values from landing/design-system/roomfit-design-spec.pdf. Use the custom
+   properties, never raw hex. Fonts come from next/font in app/layout.js,
+   which sets --font-display / --font-body / --font-data on <html>. */
+
+:root {
+  /* ground and text */
+  --paper: #f4f1e5;
+  --paper-deep: #eae5d6; /* founder section ground, segmented control track */
+  --surface: #f1ecdb;
+  --card: #ffffff;
+  --ink: #191c1a;
+  --ink-soft: #646d66;
+  --line: #e3decb;
+  --field-line: #d9d3c0; /* input borders: a touch darker than --line so fields read as fields */
+  --sketch: #c2bfb3; /* hero line art: sun, clouds, plane */
+
+  /* brand */
+  --accent: #2f6f4e;
+  --accent-deep: #235a3e; /* hover on pine */
+  --accent-ink: #ffffff;
+
+  /* score ramp: meaning only */
+  --fit-high: #2f6f4e;
+  --fit-mid: #c08a2e;
+  --fit-low: #a8564a;
+
+  /* type */
+  --display: var(--font-display), "EB Garamond", ui-serif, Georgia, serif;
+  --body: var(--font-body), "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --data: var(--font-data), "JetBrains Mono", ui-monospace, monospace;
+
+  /* shape */
+  --radius: 14px;
+  --radius-sm: 10px;
+  --pad: 16px;
+  --shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 1px 3px rgba(20, 30, 25, 0.06);
+  --shadow-lift: 0 1px 2px rgba(20, 30, 25, 0.04), 0 1px 3px rgba(20, 30, 25, 0.06),
+    0 12px 28px rgba(20, 30, 25, 0.08);
+
+  /* layout */
+  --content: 1200px;
+  --gutter: 20px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --gutter: 40px;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: var(--accent);
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+/* ---------- shared pieces ---------- */
+
+.wrap {
+  width: 100%;
+  max-width: calc(var(--content) + 2 * var(--gutter));
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 52px;
+  padding: 0 32px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background-color 160ms ease, transform 160ms ease;
+}
+
+.btn:hover {
+  background: var(--accent-deep);
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn[disabled] {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.textlink {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.eyebrow {
+  font-family: var(--data);
+  font-weight: 500;
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- scroll reveal ----------
+   components/Reveal.js adds .isIn when an element scrolls into view.
+   Without JavaScript nothing is hidden: the hidden state only applies once
+   the page has marked itself .js-motion. */
+
+.js-motion .reveal {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.js-motion .reveal.isIn {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js-motion .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

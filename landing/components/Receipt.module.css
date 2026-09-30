@@ -1,0 +1,279 @@
+.section {
+  background: var(--accent);
+  color: var(--paper);
+  padding: 64px 0;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(244, 241, 229, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--paper);
+}
+
+.icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.title {
+  margin-top: 24px;
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--paper);
+  text-wrap: balance;
+}
+
+.body {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--paper);
+  text-wrap: pretty;
+}
+
+/* ---------- the receipt card ---------- */
+
+.card {
+  width: 100%;
+  max-width: 520px;
+  align-self: center;
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 12px 32px rgba(10, 30, 20, 0.28);
+}
+
+.eyebrow {
+  font-family: var(--data);
+  font-weight: 500;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e6e1d0;
+}
+
+.cardTitleWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.cardTitle {
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.meta {
+  font-family: var(--data);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.ring {
+  position: relative;
+  flex: none;
+  width: 72px;
+  height: 72px;
+}
+
+.ring svg {
+  transform: rotate(-90deg);
+}
+
+.ringFill {
+  transition: stroke-dashoffset 1200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.ringLabel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.ringNum {
+  font-family: var(--data);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ringCap {
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--ink-soft);
+}
+
+.factors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.factor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 14px;
+}
+
+.factorTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.factorName {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.factorPts {
+  font-family: var(--data);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.track {
+  position: relative;
+  height: 6px;
+  margin-right: 7px;
+  border-radius: 3px;
+  background: #e6e1d0;
+}
+
+.bar {
+  position: relative;
+  height: 100%;
+  border-radius: 3px;
+  transition: width 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  transition-delay: calc(var(--i) * 150ms);
+}
+
+/* the knob at the end of each bar */
+.bar::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--card);
+  border: 2.5px solid var(--c);
+}
+
+.reason {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--ink-soft);
+  opacity: 0;
+  transition: opacity 500ms ease;
+  transition-delay: calc(300ms + var(--i) * 150ms);
+}
+
+.filled .reason {
+  opacity: 1;
+}
+
+/* ---------- desktop ---------- */
+
+@media (min-width: 1024px) {
+  .section {
+    padding: 128px 0;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    gap: 112px;
+    align-items: center;
+  }
+
+  .text {
+    max-width: 480px;
+  }
+
+  .icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+  }
+
+  .icon svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .title {
+    margin-top: 28px;
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .body {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .body + .body {
+    margin-top: 16px;
+  }
+
+  .card {
+    padding: 32px 32px 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ringFill,
+  .bar,
+  .reason {
+    transition: none;
+  }
+}

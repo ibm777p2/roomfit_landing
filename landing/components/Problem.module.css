@@ -1,0 +1,401 @@
+.problem {
+  padding: 64px 0 72px;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 88px;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.statHead,
+.head {
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.statHead {
+  font-size: 22px;
+  line-height: 1.3;
+}
+
+.head {
+  font-size: 26px;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+.stat {
+  display: block;
+  margin-bottom: 12px;
+  font-weight: 400;
+  font-size: 72px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  margin-top: 16px;
+  font-size: 17px;
+  line-height: 1.45;
+  color: var(--ink-soft);
+  text-wrap: pretty;
+}
+
+.cta {
+  margin-top: 24px;
+  align-self: stretch;
+}
+
+/* ---------- visuals ---------- */
+
+.visual {
+  position: relative;
+}
+
+.visualSeeker {
+  height: 452px;
+}
+
+.visualLister {
+  height: 372px;
+}
+
+.circle {
+  position: absolute;
+  top: 0;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.circleRight {
+  left: 0;
+}
+
+.circleLeft {
+  right: 0;
+}
+
+.card,
+.listing {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lift);
+}
+
+.groupsWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 214px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cardHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.cardTitle {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mono,
+.monoMeta {
+  font-family: var(--data);
+  font-weight: 500;
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.monoMeta {
+  font-size: 12px;
+}
+
+.groupRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.groupName {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.source {
+  padding: 0 4px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.chip {
+  position: absolute;
+  left: 0;
+  top: 158px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 6px 16px rgba(20, 30, 25, 0.08);
+  z-index: 1;
+}
+
+.chipNum {
+  font-family: var(--data);
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.chipLabel {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.listing {
+  position: absolute;
+  left: 0;
+  right: 24px;
+  top: 214px;
+  padding: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.thumb {
+  position: relative;
+  flex: none;
+  width: 104px;
+  height: 104px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--line);
+}
+
+.listingText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.listingTitle {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.listingNote {
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- tablet: same stacking, visuals centred ---------- */
+
+@media (min-width: 640px) {
+  .visual {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  .cta {
+    align-self: flex-start;
+  }
+}
+
+/* ---------- desktop: zigzag ---------- */
+
+@media (min-width: 1024px) {
+  .problem {
+    padding: 128px 0;
+  }
+
+  .rows {
+    gap: 144px;
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 96px;
+    align-items: center;
+  }
+
+  /* lister row: picture on the left, words on the right */
+  .rowFlip .text {
+    order: 2;
+  }
+
+  .text {
+    max-width: 500px;
+  }
+
+  .statHead {
+    font-size: 30px;
+  }
+
+  .stat {
+    margin-bottom: 16px;
+    font-size: 112px;
+  }
+
+  .head {
+    font-size: 40px;
+    line-height: 1.2;
+  }
+
+  .body {
+    margin-top: 20px;
+    font-size: 18px;
+    line-height: 1.55;
+  }
+
+  .cta {
+    margin-top: 32px;
+  }
+
+  .visual {
+    max-width: none;
+    margin: 0;
+  }
+
+  .visualSeeker {
+    height: 540px;
+  }
+
+  .visualLister {
+    height: 500px;
+  }
+
+  .circle {
+    width: 440px;
+    height: 440px;
+  }
+
+  .circleRight {
+    left: auto;
+    right: 0;
+  }
+
+  .circleLeft {
+    right: auto;
+    left: 0;
+  }
+
+  .groupsWrap {
+    right: auto;
+    top: 300px;
+    width: 380px;
+    gap: 10px;
+  }
+
+  .card {
+    padding: 20px;
+    gap: 14px;
+  }
+
+  .cardTitle {
+    font-size: 15px;
+  }
+
+  .mono {
+    font-size: 12px;
+  }
+
+  .groupName {
+    font-size: 14px;
+  }
+
+  .groupRow {
+    padding-top: 14px;
+  }
+
+  .source {
+    font-size: 13px;
+  }
+
+  .chip {
+    left: auto;
+    right: 0;
+    top: 268px;
+    padding: 12px 14px;
+  }
+
+  .chipNum {
+    font-size: 20px;
+  }
+
+  .chipLabel {
+    font-size: 13px;
+  }
+
+  .listing {
+    left: auto;
+    right: 0;
+    top: 340px;
+    width: 420px;
+    padding: 14px;
+    gap: 16px;
+  }
+
+  .thumb {
+    width: 120px;
+    height: 120px;
+  }
+
+  .listingTitle {
+    font-size: 17px;
+  }
+
+  .monoMeta {
+    font-size: 13px;
+  }
+
+  .listingNote {
+    font-size: 14px;
+  }
+}
