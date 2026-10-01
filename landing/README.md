@@ -1,9 +1,13 @@
 # landing/
 
-The roomfit landing page for joinroomfit.com. It will be built in Next.js as a
-separate Vercel project, deployed from this folder (root directory `landing/`).
-It is not the app: the app is the Vite project in `frontend/`, live at
-app.joinroomfit.com, and nothing here changes it.
+The roomfit landing page for joinroomfit.com: a Next.js site, deployed as its
+own Vercel project from this folder (root directory `landing/`). It is not the
+app: the app is the Vite project in `frontend/`, live at app.joinroomfit.com,
+and nothing here changes it.
+
+**Stage:** built and in review (PR #3). The preview runs at
+roomfit-landing-six.vercel.app; joinroomfit.com still redirects to the app until
+the domain moves to this project.
 
 | Path | What |
 |---|---|
@@ -62,6 +66,10 @@ Decided by Vincent; flagged here so the spec and the build can be reconciled.
   `FOUNDER_VIDEO_ID` is set in `lib/content.js`.
 - **Team:** Vincent L., Co-founder. Links and photos not provided yet are left
   out rather than shown as dead links.
+- **Fit receipt:** a 17-second looping "how it works" demo (set preferences,
+  Find my fit, open the top room's receipt) instead of a one-time fill. It is
+  labelled Example.
+- **Footer:** no GitHub link.
 
 ## Viewing the design
 

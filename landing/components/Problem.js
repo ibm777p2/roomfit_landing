@@ -53,7 +53,9 @@ export default function Problem() {
                   <div className={styles.mono}>101K members · 20+ posts a day</div>
                 </div>
               </div>
-              <p className={styles.source}>Public SF housing groups, Sept 2026</p>
+              <p className={styles.source}>
+                Public SF housing groups, Sept 2026 · Rent: Apartment List, 2026
+              </p>
             </div>
           </div>
         </div>
