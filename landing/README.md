@@ -5,9 +5,8 @@ own Vercel project from this folder (root directory `landing/`). It is not the
 app: the app is the Vite project in `frontend/`, live at app.joinroomfit.com,
 and nothing here changes it.
 
-**Stage:** built and in review (PR #3). The preview runs at
-roomfit-landing-six.vercel.app; joinroomfit.com still redirects to the app until
-the domain moves to this project.
+**Stage:** live on joinroomfit.com, deployed from `main` by the
+`roomfit-landing` Vercel project. The waitlist takes real sign-ups.
 
 | Path | What |
 |---|---|
@@ -42,10 +41,14 @@ A separate Vercel project, **Root Directory `landing`**, production branch
 | `SUPABASE_URL` | the RoomFit project URL |
 | `SUPABASE_PUBLISHABLE_KEY` | the project's publishable key (`sb_publishable_…`) — never the service role key |
 | `NEXT_PUBLIC_APP_URL` | `https://app.joinroomfit.com` |
-| `NEXT_PUBLIC_SITE_URL` | this site's address (`https://joinroomfit.com` once the domain is attached) |
+| `NEXT_PUBLIC_SITE_URL` | `https://joinroomfit.com` |
 
 `vercel.json` skips the build when a push doesn't touch `landing/`, so app-only
 commits don't redeploy the landing page.
+
+Domains: joinroomfit.com is the main address and www.joinroomfit.com redirects
+to it (308). app.joinroomfit.com belongs to the app's own Vercel project; never
+move it here.
 
 ## Where this build departs from DESIGN_SPEC.md
 

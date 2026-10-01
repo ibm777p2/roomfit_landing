@@ -239,6 +239,9 @@ landing/               landing page (separate Next.js project + its design hando
   Migrations 10–12 are on the live database, and the app merged from
   `Vincent_Changes`. The claim screen requires the three lifestyle answers
   before it will publish.
+- ✅ **Landing page** — LIVE on joinroomfit.com (www redirects to it), its own
+  Vercel project (`roomfit-landing`) deploying `landing/` from `main`. Waitlist
+  sign-ups land in the `waitlist` table, verified with a real sign-up.
 - ⬜ **Public shareable listings** — specced, not started (the last planned item)
 
 ## Working style
