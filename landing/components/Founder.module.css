@@ -1,0 +1,279 @@
+.section {
+  background: var(--paper-deep);
+  padding: 56px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+}
+
+.card {
+  width: 100%;
+  max-width: 760px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 12px 12px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  box-shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 8px 24px rgba(20, 30, 25, 0.06);
+}
+
+/* ---------- video ---------- */
+
+.videoWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--line);
+}
+
+.poster {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-left: 3px;
+  box-shadow: 0 6px 18px rgba(20, 30, 25, 0.25);
+}
+
+.play svg {
+  width: 22px;
+  height: 22px;
+}
+
+.embed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.caption {
+  padding: 0 4px;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+/* ---------- note ---------- */
+
+.note {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 12px;
+}
+
+.title {
+  font-weight: 700;
+  font-size: 30px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.letter {
+  font-size: 17px;
+  line-height: 1.6;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+
+.letter:first-of-type {
+  margin-top: 4px;
+}
+
+.signoff {
+  margin-top: 4px;
+  font-family: var(--display);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--accent);
+}
+
+/* ---------- team ---------- */
+
+.team {
+  list-style: none;
+  margin: 0;
+  padding: 20px 12px 0;
+  border-top: 1px dashed var(--field-line);
+  display: grid;
+  gap: 12px;
+}
+
+.person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--card);
+  border: 1px solid var(--line);
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+.who {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.name {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.role {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.links {
+  display: flex;
+  gap: 4px;
+}
+
+.iconLink {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  transition: background-color 150ms ease;
+}
+
+.iconLink:hover {
+  background: var(--paper-deep);
+}
+
+/* ---------- closing line ---------- */
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4f5751;
+}
+
+.footerLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 10px;
+}
+
+/* ---------- tablet and up ---------- */
+
+@media (min-width: 768px) {
+  .section {
+    padding: 112px var(--gutter) 80px;
+    gap: 40px;
+  }
+
+  .card {
+    border-radius: 24px;
+    padding: 20px 20px 48px;
+    gap: 44px;
+    box-shadow: 0 1px 2px rgba(20, 30, 25, 0.04), 0 12px 32px rgba(20, 30, 25, 0.07);
+  }
+
+  .video {
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius);
+  }
+
+  .play {
+    width: 80px;
+    height: 80px;
+  }
+
+  .play svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .caption {
+    font-size: 14px;
+  }
+
+  .note {
+    padding: 0 44px;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .letter {
+    font-size: 19px;
+  }
+
+  .signoff {
+    font-size: 26px;
+  }
+
+  .team {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+    padding: 28px 44px 0;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .footer {
+    flex-direction: row;
+    gap: 10px;
+    font-size: 15px;
+  }
+}

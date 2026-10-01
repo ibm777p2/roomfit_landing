@@ -1,0 +1,16 @@
+.sky {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.sky canvas {
+  display: block;
+}
+
+.live {
+  opacity: 1;
+}
