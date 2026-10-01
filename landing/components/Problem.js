@@ -54,7 +54,8 @@ export default function Problem() {
                 </div>
               </div>
               <p className={styles.source}>
-                Public SF housing groups, Sept 2026 · Rent: Apartment List, 2026
+                Public SF housing groups, Sept 2026 ·{" "}
+                <span className={styles.keep}>Rent: Apartment List, 2026</span>
               </p>
             </div>
           </div>
