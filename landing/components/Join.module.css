@@ -158,7 +158,7 @@
   outline-offset: 2px;
 }
 
-/* neighbourhood pills, all alike; the chosen one is bold with a pine ring */
+/* neighbourhood pills, all alike; chosen ones are bold with a pine ring */
 .pills {
   display: flex;
   flex-wrap: wrap;
@@ -190,6 +190,18 @@
   color: var(--accent);
   font-weight: 700;
   box-shadow: 0 0 0 2px var(--card), 0 0 0 4px var(--accent);
+}
+
+/* Once three are chosen the rest can't be picked until one is unticked. Greyed
+   with --ink-soft rather than faded with opacity, so the names stay readable
+   (5.4:1 on the card). */
+.pill:has(input:disabled) {
+  color: var(--ink-soft);
+  cursor: not-allowed;
+}
+
+.pill:has(input:disabled):hover {
+  border-color: var(--field-line);
 }
 
 .trap {

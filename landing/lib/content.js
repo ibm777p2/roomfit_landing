@@ -5,8 +5,6 @@
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.joinroomfit.com";
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://joinroomfit.com";
 
-export const CONTACT_EMAIL = "hello@joinroomfit.com";
-
 // The pills on the join form. "Somewhere else" catches everyone outside these,
 // so nobody is turned away for living in the wrong place.
 export const NEIGHBORHOODS = [
@@ -28,6 +26,10 @@ export const NEIGHBORHOODS = [
   "Russian Hill",
 ];
 export const ELSEWHERE = "Somewhere else";
+
+// How many neighbourhoods one sign-up can pick. The database enforces the same
+// limit (supabase/14_waitlist_neighborhoods.sql); change both together.
+export const MAX_NEIGHBORHOODS = 3;
 
 // Stored in the waitlist table's `role` column. Labels are what visitors see.
 export const ROLES = [
@@ -68,22 +70,23 @@ export const EXAMPLE_MATCH = {
   ],
 };
 
-// Team. A link or photo left as null is simply not shown, so a missing URL
-// never turns into a dead link on the live page.
+// Team. A site or photo left as null is simply not shown, so a missing URL
+// never turns into a dead link on the live page. Photos are square, cropped on
+// the face, in public/img/.
 export const TEAM = [
   {
     name: "Ni Ni",
     role: "Founder",
     initials: "NN",
-    photo: null,
-    links: [{ label: "GitHub", href: "https://github.com/ninitwin4" }],
+    photo: "/img/team-nini.jpg",
+    site: "https://ninitinwin.com/",
   },
   {
     name: "Vincent L.",
     role: "Co-founder",
     initials: "VL",
-    photo: null,
-    links: [], // add { label: "LinkedIn", href: "https://..." } when ready
+    photo: "/img/team-vincent.jpg",
+    site: "https://vincentlai.web.app/",
   },
 ];
 

@@ -186,6 +186,7 @@ supabase/              run in numerical order
   11_claims.sql        rooms.active, room_sources, claim_links + claim functions
   12_descriptions.sql  rooms.description (optional, 2,000 chars), carried by claims
   13_waitlist.sql      landing-page waitlist + join_waitlist() (closed table)
+  14_waitlist_neighborhoods.sql  up to 3 neighbourhoods per waitlist sign-up
   undo/                one undo script per migration from 10 on
 render.yaml            backend deploy blueprint
 landing/               landing page (separate Next.js project + its design handoff)

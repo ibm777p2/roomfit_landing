@@ -131,8 +131,8 @@
 
 .avatar {
   flex: none;
-  width: 56px;
-  height: 56px;
+  width: 67px;
+  height: 67px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -167,14 +167,13 @@
   color: var(--ink-soft);
 }
 
-.links {
-  display: flex;
-  gap: 4px;
-}
-
-.iconLink {
-  width: 44px;
-  height: 44px;
+/* The person's website, under their name and role. The icon is 18px but the
+   link is 32px square, so it's an easy tap; the negative margin lines the icon
+   up with the text above it. */
+.site {
+  width: 32px;
+  height: 32px;
+  margin: 2px 0 0 -7px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -183,7 +182,7 @@
   transition: background-color 150ms ease;
 }
 
-.iconLink:hover {
+.site:hover {
   background: var(--paper-deep);
 }
 
@@ -198,13 +197,6 @@
   font-size: 14px;
   line-height: 1.5;
   color: #4f5751;
-}
-
-.footerLinks {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 4px 10px;
 }
 
 /* ---------- tablet and up ---------- */
@@ -267,8 +259,8 @@
   }
 
   .avatar {
-    width: 60px;
-    height: 60px;
+    width: 72px;
+    height: 72px;
   }
 
   .footer {

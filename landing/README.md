@@ -58,13 +58,15 @@ Decided by Vincent; flagged here so the spec and the build can be reconciled.
   climbs and dips with a fading dashed trail, a slowly turning sun. It stays in
   the clear sky around the headline, pauses off screen, and is static under
   reduced motion. Everything else animates with CSS.
-- **Join form:** no neighbourhood dropdown — the pills are the only choice, and
-  sit above the button. A **Name** field is added. "Somewhere else" joins
+- **Join form:** no neighbourhood dropdown — pills are the only choice (up to
+  three), and sit above the button. A **Name** field is added. "Somewhere else" joins
   the pills. No "Opening soon" label; all pills look alike until chosen. The
   button reads **Join the waitlist**.
 - **Waitlist table:** roles are `looking` / `listing` / `both`, it has a `name`,
-  one row per email (a repeat sign-up updates it), and inserts go through
-  `join_waitlist()` from the server — see `supabase/13_waitlist.sql`.
+  one row per email (a repeat sign-up updates it), up to three neighbourhoods
+  in `neighborhoods` (the first is also kept in `neighborhood`), and inserts go
+  through `join_waitlist()` from the server — see `supabase/13_waitlist.sql`
+  and `supabase/14_waitlist_neighborhoods.sql`.
 - **Founder video:** the placeholder (poster + play button) shows until
   `FOUNDER_VIDEO_ID` is set in `lib/content.js`.
 - **Team:** Vincent L., Co-founder. Links and photos not provided yet are left

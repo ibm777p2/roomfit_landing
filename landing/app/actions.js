@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@supabase/supabase-js";
-import { NEIGHBORHOODS, ELSEWHERE, ROLES } from "@/lib/content";
+import { NEIGHBORHOODS, ELSEWHERE, MAX_NEIGHBORHOODS, ROLES } from "@/lib/content";
 
 // The waitlist form posts here. It runs on the server only, so the Supabase
 // key never ships to the browser (it's a public key anyway: the table is
@@ -17,11 +17,13 @@ export async function joinWaitlist(_prev, formData) {
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();
   const role = String(formData.get("role") ?? "");
-  const neighborhood = String(formData.get("neighborhood") ?? "");
+  // One form field per ticked pill. Deduped here so a replayed or hand-built
+  // request can't count one neighbourhood twice toward the limit.
+  const neighborhoods = [...new Set(formData.getAll("neighborhood").map(String))];
 
   // Spam trap: a field people never see. Bots fill it in; pretend it worked.
   if (String(formData.get("website") ?? "") !== "") {
-    return { status: "success", name, neighborhood };
+    return { status: "success", name, neighborhoods };
   }
 
   const errors = {};
@@ -29,7 +31,11 @@ export async function joinWaitlist(_prev, formData) {
   else if (name.length > 80) errors.name = "That name is too long. Keep it under 80 characters.";
   if (!EMAIL.test(email) || email.length > 254) errors.email = "Enter a valid email address.";
   if (!ROLES.some((r) => r.value === role)) errors.role = "Choose Looking, Listing or Both.";
-  if (![...NEIGHBORHOODS, ELSEWHERE].includes(neighborhood)) errors.neighborhood = "Pick a neighborhood.";
+  const allowed = [...NEIGHBORHOODS, ELSEWHERE];
+  if (!neighborhoods.length) errors.neighborhood = "Pick at least one neighborhood.";
+  else if (neighborhoods.length > MAX_NEIGHBORHOODS)
+    errors.neighborhood = `Pick up to ${MAX_NEIGHBORHOODS} neighborhoods.`;
+  else if (!neighborhoods.every((n) => allowed.includes(n))) errors.neighborhood = "Pick from the list.";
   if (Object.keys(errors).length) return { status: "invalid", errors };
 
   const url = process.env.SUPABASE_URL;
@@ -46,12 +52,12 @@ export async function joinWaitlist(_prev, formData) {
     p_name: name,
     p_email: email,
     p_role: role,
-    p_neighborhood: neighborhood,
+    p_neighborhoods: neighborhoods,
   });
 
   if (error) {
     console.error("[waitlist] join_waitlist failed:", error.message);
     return { status: "error" };
   }
-  return { status: "success", name, neighborhood };
+  return { status: "success", name, neighborhoods };
 }

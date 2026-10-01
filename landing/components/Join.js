@@ -3,12 +3,13 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { joinWaitlist } from "@/app/actions";
 import { ROLE_EVENT } from "./JoinLink";
-import { NEIGHBORHOODS, ELSEWHERE, ROLES, SITE_URL } from "@/lib/content";
+import { NEIGHBORHOODS, ELSEWHERE, MAX_NEIGHBORHOODS, ROLES, SITE_URL } from "@/lib/content";
 import styles from "./Join.module.css";
 
 // The waitlist form: I'm (Looking / Listing / Both) → Name → Email →
-// neighbourhood pills → Join the waitlist. The pills sit above the button so
-// the form reads top to bottom and nobody submits before choosing.
+// neighbourhood pills (up to three) → Join the waitlist. The pills sit above
+// the button so the form reads top to bottom and nobody submits before
+// choosing.
 //
 // Every field is controlled, so nothing typed is lost if the server says no.
 
@@ -19,7 +20,7 @@ export default function Join() {
   const [role, setRole] = useState("looking");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [hood, setHood] = useState("");
+  const [hoods, setHoods] = useState([]);
   const [clientErrors, setClientErrors] = useState({});
   const [state, formAction, pending] = useActionState(joinWaitlist, { status: "idle" });
   const successRef = useRef(null);
@@ -46,7 +47,7 @@ export default function Join() {
     const next = {};
     if (!name.trim()) next.name = "Add your name.";
     if (!EMAIL.test(email.trim())) next.email = "Enter a valid email address.";
-    if (!hood) next.neighborhood = "Pick a neighborhood.";
+    if (!hoods.length) next.neighborhood = "Pick at least one neighborhood.";
     setClientErrors(next);
     if (Object.keys(next).length) e.preventDefault();
   }
@@ -67,7 +68,7 @@ export default function Join() {
 
         <div className={`${styles.card} reveal`} style={{ "--reveal-delay": "120ms" }}>
           {state.status === "success" ? (
-            <Success refEl={successRef} name={state.name} hood={state.neighborhood} />
+            <Success refEl={successRef} name={state.name} hoods={state.neighborhoods} />
           ) : (
             <form action={formAction} onSubmit={onSubmit} noValidate className={styles.form}>
               <fieldset className={styles.fieldset}>
@@ -149,24 +150,34 @@ export default function Join() {
                 className={styles.fieldset}
                 aria-describedby={errors.neighborhood ? "join-hood-err" : undefined}
               >
-                <legend className={styles.label}>Pick your neighborhood</legend>
+                <legend className={styles.label}>
+                  Pick up to {MAX_NEIGHBORHOODS} neighborhoods
+                </legend>
                 <div className={styles.pills}>
-                  {[...NEIGHBORHOODS, ELSEWHERE].map((n) => (
-                    <label key={n} className={`${styles.pill} ${hood === n ? styles.pillOn : ""}`}>
-                      <input
-                        type="radio"
-                        name="neighborhood"
-                        value={n}
-                        checked={hood === n}
-                        onChange={() => {
-                          setHood(n);
-                          clear("neighborhood");
-                        }}
-                      />
-                      {n}
-                    </label>
-                  ))}
+                  {[...NEIGHBORHOODS, ELSEWHERE].map((n) => {
+                    const on = hoods.includes(n);
+                    const full = !on && hoods.length >= MAX_NEIGHBORHOODS;
+                    return (
+                      <label key={n} className={`${styles.pill} ${on ? styles.pillOn : ""}`}>
+                        <input
+                          type="checkbox"
+                          name="neighborhood"
+                          value={n}
+                          checked={on}
+                          disabled={full}
+                          onChange={() => {
+                            setHoods((prev) => (on ? prev.filter((x) => x !== n) : [...prev, n]));
+                            clear("neighborhood");
+                          }}
+                        />
+                        {n}
+                      </label>
+                    );
+                  })}
                 </div>
+                {hoods.length >= MAX_NEIGHBORHOODS && (
+                  <p className={styles.help}>That's {MAX_NEIGHBORHOODS}. Untick one to choose another.</p>
+                )}
                 {errors.neighborhood && (
                   <p id="join-hood-err" className={styles.error}>
                     {errors.neighborhood}
@@ -197,9 +208,11 @@ export default function Join() {
   );
 }
 
-function Success({ refEl, name, hood }) {
+function Success({ refEl, name, hoods }) {
   const [copied, setCopied] = useState(false);
-  const where = hood && hood !== ELSEWHERE ? hood : null;
+  const named = (hoods || []).filter((h) => h !== ELSEWHERE);
+  const where =
+    named.length > 1 ? `${named.slice(0, -1).join(", ")} and ${named.at(-1)}` : named[0] || null;
 
   async function share() {
     const data = {
@@ -226,7 +239,7 @@ function Success({ refEl, name, hood }) {
       </h3>
       <p className={styles.successBody}>
         {where
-          ? `${where} is on the list. We'll email you when roomfit opens there.`
+          ? `${where} ${named.length > 1 ? "are" : "is"} on the list. We'll email you when roomfit opens there.`
           : "We'll email you when roomfit opens near you."}
       </p>
       <button type="button" className={styles.share} onClick={share}>
