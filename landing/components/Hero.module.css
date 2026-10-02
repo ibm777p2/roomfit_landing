@@ -216,10 +216,12 @@
     white-space: nowrap;
   }
 
+  /* The skyline's own height: 1440:400 up to its 1600px cap. Set as a height,
+     not aspect-ratio + max-height, because that pair also caps the width
+     (440px tall → 1584px wide) and left the strip pinned to the left edge on
+     screens wider than that. */
   .ground {
-    height: auto;
-    aspect-ratio: 1440 / 400;
-    max-height: 440px;
+    height: min(27.78vw, 445px);
   }
 
   .skylineMobile {
@@ -242,6 +244,17 @@
     top: 120px;
     width: 56px;
     height: 56px;
+  }
+}
+
+/* Past 1600px the skyline stops growing and both its ends come into view. The
+   drawing runs off its own edges (the bridge on the left, Coit Tower's hill on
+   the right), so fade them into the paper rather than show a hard cut. The
+   right fade is short because Coit Tower stands only 22px from that edge. */
+@media (min-width: 1600px) {
+  .skylineDesktop {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 5%, #000 98.4%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 5%, #000 98.4%, transparent);
   }
 }
 
