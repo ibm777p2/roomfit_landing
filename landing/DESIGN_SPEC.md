@@ -209,7 +209,7 @@ Anchor `id="join"`.
 
 Ground: `--paper-deep`.
 
-**Video:** poster + play button, caption *Why I'm building roomfit · 90 sec*. If no video yet, **omit the block** — no "coming soon". Load the embed only on click.
+**Video:** poster + play button, caption *Why I'm building roomfit*. If no video yet, **omit the block** — no "coming soon". Load the embed only on click.
 
 **Founder note**
 - Eyebrow: A NOTE FROM NI NI

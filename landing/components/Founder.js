@@ -2,9 +2,10 @@ import { TEAM, FOUNDER_VIDEO_ID } from "@/lib/content";
 import styles from "./Founder.module.css";
 
 // Founder note, team, and the page's closing line.
-// The video block is a placeholder for now: a box with a play button that does
-// nothing. When FOUNDER_VIDEO_ID is set in lib/content.js it becomes a YouTube
-// embed (privacy-enhanced domain, loaded only when this section renders).
+// The video is a YouTube embed of FOUNDER_VIDEO_ID (lib/content.js), on the
+// privacy-enhanced domain and lazy-loaded, so it's fetched only as the section
+// nears the screen. With no ID it falls back to a placeholder: a box with a
+// play button that does nothing.
 
 // Each person's website, shown under their name: a globe, the usual sign for
 // "website". Drawn inline, so no icon library.
@@ -25,6 +26,7 @@ function Video() {
         src={`https://www.youtube-nocookie.com/embed/${FOUNDER_VIDEO_ID}`}
         title="Why I'm building roomfit"
         loading="lazy"
+        referrerPolicy="strict-origin-when-cross-origin"
         allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
       />
@@ -49,7 +51,7 @@ export default function Founder() {
           <div className={styles.video}>
             <Video />
           </div>
-          <span className={styles.caption}>Why I'm building roomfit · 90 sec</span>
+          <span className={styles.caption}>Why I'm building roomfit</span>
         </div>
 
         <div className={styles.note}>

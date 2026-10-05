@@ -67,8 +67,9 @@ Decided by Vincent; flagged here so the spec and the build can be reconciled.
   in `neighborhoods` (the first is also kept in `neighborhood`), and inserts go
   through `join_waitlist()` from the server — see `supabase/13_waitlist.sql`
   and `supabase/14_waitlist_neighborhoods.sql`.
-- **Founder video:** the placeholder (poster + play button) shows until
-  `FOUNDER_VIDEO_ID` is set in `lib/content.js`.
+- **Founder video:** a YouTube embed (privacy-enhanced domain, lazy-loaded),
+  rather than loading only on click. The ID is `FOUNDER_VIDEO_ID` in
+  `lib/content.js`; set it to null for the placeholder.
 - **Team:** Vincent L., Co-founder. Links and photos not provided yet are left
   out rather than shown as dead links.
 - **Fit receipt:** a 17-second looping "how it works" demo (set preferences,

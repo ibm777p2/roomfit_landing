@@ -31,7 +31,7 @@
 .video {
   position: relative;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9; /* the video's own shape, so phones get no black bars */
   border-radius: 12px;
   overflow: hidden;
   background: var(--line);
@@ -215,7 +215,6 @@
   }
 
   .video {
-    aspect-ratio: 16 / 9;
     border-radius: var(--radius);
   }
 

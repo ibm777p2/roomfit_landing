@@ -90,6 +90,6 @@ export const TEAM = [
   },
 ];
 
-// The founder video. Leave null to show the placeholder with a play button.
-// Later: a YouTube video ID, e.g. "dQw4w9WgXcQ".
-export const FOUNDER_VIDEO_ID = null;
+// The founder video: the ID from its YouTube link (youtube.com/watch?v=<ID>).
+// Set to null to show the placeholder with a play button instead.
+export const FOUNDER_VIDEO_ID = "NDwgZKqwwfQ";
