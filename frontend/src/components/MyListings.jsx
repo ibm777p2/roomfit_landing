@@ -32,6 +32,11 @@ const CLAIM_PROBLEMS = {
 const shortDate = (iso) =>
   new Date(iso).toLocaleDateString(undefined, { month: "short", day: "numeric" });
 
+// Listings last 30 days (supabase/17_listing_expiry.sql). A daily job pauses
+// the ones whose time is up, and "Show again" renews them for another 30.
+const isExpired = (room) =>
+  !!room.expires_at && new Date(room.expires_at) <= new Date();
+
 // `claimToken` is set when someone arrived through a claim link: the tab shows
 // the claim screen instead of the list until they accept or cancel.
 export default function MyListings({ isAdmin = false, claimToken = null, onClaimDone }) {
@@ -275,10 +280,21 @@ export default function MyListings({ isAdmin = false, claimToken = null, onClaim
               <p className="room-meta">
                 ${room.rent}/mo · {room.location}
               </p>
-              {room.active === false && (
+              {room.active === false ? (
                 <p className="status-tag">
-                  {isAdmin ? "Inactive" : "Paused"} · not shown in search
+                  {isExpired(room)
+                    ? "Expired after 30 days"
+                    : isAdmin
+                    ? "Inactive"
+                    : "Paused"}{" "}
+                  · not shown in search
                 </p>
+              ) : (
+                room.expires_at && (
+                  <p className="listing-expiry">
+                    Live until {shortDate(room.expires_at)}
+                  </p>
+                )
               )}
               <p className="listing-traits">
                 Tidy {room.cleanliness}/5 · Social {room.social_level}/5 ·{" "}
@@ -325,7 +341,11 @@ export default function MyListings({ isAdmin = false, claimToken = null, onClaim
                     disabled={busy}
                     onClick={() => togglePause(room)}
                   >
-                    {room.active === false ? "Show again" : "Pause listing"}
+                    {room.active === false
+                      ? isExpired(room)
+                        ? "Renew for 30 days"
+                        : "Show again"
+                      : "Pause listing"}
                   </button>
                   <button
                     type="button"

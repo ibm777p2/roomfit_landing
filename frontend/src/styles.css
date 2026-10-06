@@ -287,6 +287,12 @@ body {
   margin: 8px 0 0;
 }
 
+.listing-expiry {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+}
+
 .listing-actions {
   display: flex;
   align-items: center;
@@ -625,6 +631,31 @@ body {
   font-weight: 600;
 }
 
+/* a Craigslist room whose host hasn't claimed it yet */
+.owner-pending {
+  color: var(--ink-soft);
+}
+
+.interest-sent {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* --- "I'm interested" sheet ---------------------------------------------- */
+.interest-meta {
+  margin: 4px 0 18px;
+}
+
+.interest-done p {
+  margin: 0 0 12px;
+  line-height: 1.5;
+}
+
+.interest-done .submit {
+  margin-top: 8px;
+}
+
 .sample-tag {
   /* block so the "Why this score?" button below doesn't flow up beside it,
      but fit-content so it still hugs the text as a pill */
@@ -859,6 +890,34 @@ body {
   width: auto;
   flex-shrink: 0;
   padding: 12px 18px;
+}
+
+/* suggested first replies for a room's owner: tap to fill the box */
+.suggestions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.suggestion {
+  max-width: 85%;
+  padding: 9px 13px;
+  font-family: var(--body);
+  font-size: 14px;
+  line-height: 1.4;
+  text-align: left;
+  color: var(--accent);
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  cursor: pointer;
+}
+
+.suggestion.on {
+  color: var(--accent-ink);
+  background: var(--accent);
 }
 
 /* --- saved rooms --------------------------------------------------------- */

@@ -8,7 +8,14 @@ const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 export const supabase = createClient(url, anonKey);
 
 const ROOM_FIELDS =
-  "id, title, rent, location, description, cleanliness, social_level, sleep_schedule, pets_allowed, smoking_allowed, owner_id, photo_url, photos, active";
+  "id, title, rent, location, description, cleanliness, social_level, sleep_schedule, pets_allowed, smoking_allowed, owner_id, photo_url, photos, active, source, claimed_at, expires_at";
+
+// A room copied from Craigslist whose host hasn't claimed it yet. Its owner_id
+// is the admin who imported it, so it takes "I'm interested" instead of a
+// message. See supabase/15_craigslist.sql.
+export function awaitingHost(room) {
+  return room?.source === "craigslist" && !room?.claimed_at;
+}
 
 // Rooms for the Find tab. RLS decides what you MAY read (active rooms, your own,
 // and everything for admins); this decides what the search SHOWS: active rooms
@@ -369,7 +376,7 @@ export async function fetchInbox() {
   const uid = await currentUserId();
   const { data, error } = await supabase
     .from("messages")
-    .select(`${MESSAGE_FIELDS}, rooms (id, title, photos, photo_url)`)
+    .select(`${MESSAGE_FIELDS}, rooms (id, title, photos, photo_url, owner_id)`)
     .or(`sender_id.eq.${uid},recipient_id.eq.${uid}`)
     .order("created_at", { ascending: false })
     .limit(300);
@@ -421,6 +428,35 @@ export async function hideThread(roomId, otherId) {
     .single();
   if (error) throw new Error(`Couldn't remove that conversation: ${error.message}`);
   return data.created_at;
+}
+
+// --- "I'm interested" (rooms whose host isn't on RoomFit yet) ---------------
+// The database does the rest: the first interest in a room emails its host a
+// claim link, and on claim each note becomes the person's first message.
+
+export const INTEREST_NOTE_MAX = 500; // matches the check in 15_craigslist.sql
+export const INTEREST_NOTE_DEFAULT = "Hi! Is the room still available?";
+
+// Rooms this user has said they're interested in, as a Set of id strings.
+// RLS returns only their own rows.
+export async function fetchMyInterestIds() {
+  const uid = await currentUserId();
+  const { data, error } = await supabase
+    .from("room_interests")
+    .select("room_id")
+    .eq("user_id", uid);
+  if (error) throw new Error(`Couldn't load your interests: ${error.message}`);
+  return new Set((data ?? []).map((r) => String(r.room_id)));
+}
+
+// "sent", or "already" if they'd said so before.
+export async function expressInterest(roomId, note) {
+  const { data, error } = await supabase.rpc("express_interest", {
+    p_room_id: roomId,
+    p_note: note ?? null,
+  });
+  if (error) throw new Error(error.message);
+  return data;
 }
 
 // --- saved / favourite rooms ------------------------------------------------

@@ -8,7 +8,7 @@ export default function PreferenceForm({ onSubmit, loading, isAdmin = false }) {
   // forgets it's on and mistakes the results for what everyone else sees.
   const [includeInactive, setIncludeInactive] = useState(false);
   const [prefs, setPrefs] = useState({
-    budget_max: 1000,
+    budget_max: 1500, // just above SF's median room (~$1,360 on Craigslist, Oct 2026)
     location_pref: "Mission",
     cleanliness_pref: 4,
     social_pref: 3,
