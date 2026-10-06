@@ -158,7 +158,7 @@ export default function RoomCard({
           claims it, so it shows neither that admin nor a Message button. */}
       {awaitingHost(room) ? (
         <div className="owner-row">
-          <span className="owner-pending">Host isn't on RoomFit yet</span>
+          <span className="owner-pending">Room managed by RoomFit team</span>
           {interestSent ? (
             <span className="interest-sent">Interest sent ✓</span>
           ) : (

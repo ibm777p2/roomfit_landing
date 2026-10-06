@@ -287,6 +287,12 @@ body {
   margin: 8px 0 0;
 }
 
+.listing-expiry {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 6px 0 0;
+}
+
 .listing-actions {
   display: flex;
   align-items: center;
