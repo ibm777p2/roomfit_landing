@@ -55,7 +55,7 @@ move it here.
 Decided by Vincent; flagged here so the spec and the build can be reconciled.
 
 - **Hero motion uses three.js**, not Motion: drifting clouds, a plane that
-  climbs and dips with a fading dashed trail, a slowly turning sun. It stays in
+  climbs at 45° on a loop, with a fading dashed trail, a slowly turning sun. It stays in
   the clear sky around the headline, pauses off screen, and is static under
   reduced motion. Everything else animates with CSS.
 - **Join form:** no neighbourhood dropdown — pills are the only choice (up to

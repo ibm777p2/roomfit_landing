@@ -185,7 +185,7 @@
   top: 500px;
   width: 44px;
   height: 20px;
-  transform: rotate(-6deg);
+  transform: rotate(-45deg); /* climbing, as the animated one does */
 }
 
 /* ---------- tablet ---------- */

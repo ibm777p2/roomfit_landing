@@ -4,8 +4,8 @@ import { useEffect, useRef } from "react";
 import styles from "./Sky.module.css";
 
 // The hero sky, drawn with three.js: slow-turning sun, drifting clouds, and a
-// plane flying a figure-eight (∞) across the whole sky — from just under the
-// nav down to the rooftops — leaving a dashed trail that fades.
+// plane that climbs at 45° up the left of the sky and off the edge, leaving a
+// dashed trail that fades, then sets off again from the bottom-left.
 //
 // It works in CSS pixels: an orthographic camera the size of the hero, so an
 // object at (x, y) sits x px from the left and y px from the top.
@@ -13,8 +13,8 @@ import styles from "./Sky.module.css";
 // It measures the nav, the headline block ([data-sky-avoid]) and the skyline
 // ([data-sky-ground]). Clouds keep to the clear sky: they drift across the
 // band above the headline and the band below the buttons, and on wide screens
-// bob beside the headline. The plane's ∞ spans the sky, so it does pass behind
-// the words where the loops cross; the text sits above the canvas.
+// bob beside the headline. The plane's line is aimed just past the headline's
+// top-left corner, so it climbs beside the words and never behind them.
 //
 // Every object is drawn whole (fill, then outline) in its own layer, so a
 // cloud hides whatever is behind it instead of letting outlines show through.
@@ -59,6 +59,8 @@ const LAYER_SUN = 0;
 const LAYER_CLOUDS = 10; // each cloud gets its own pair above this
 const LAYER_TRAIL = 900;
 const LAYER_PLANE = 1000;
+
+const PLANE_REST = 1.5; // seconds of empty sky between flights
 
 export default function Sky() {
   const hostRef = useRef(null);
@@ -212,37 +214,6 @@ export default function Sky() {
         }
       }
 
-      // The plane's path: a horizontal figure-eight (lemniscate of Gerono),
-      // sampled once and walked by distance so the speed is steady everywhere.
-      function buildFlightPath(cx, cy, A, B) {
-        const N = 900;
-        const pts = [];
-        const cum = [0];
-        for (let i = 0; i <= N; i++) {
-          const t = (i / N) * TAU;
-          pts.push({ x: cx + A * Math.cos(t), y: cy + B * Math.sin(2 * t) });
-          if (i > 0) {
-            const a = pts[i - 1];
-            const b = pts[i];
-            cum.push(cum[i - 1] + Math.hypot(b.x - a.x, b.y - a.y));
-          }
-        }
-        const length = cum[N];
-        const at = (s) => {
-          s = ((s % length) + length) % length;
-          let lo = 0;
-          let hi = N;
-          while (hi - lo > 1) {
-            const mid = (lo + hi) >> 1;
-            if (cum[mid] <= s) lo = mid;
-            else hi = mid;
-          }
-          const f = (s - cum[lo]) / (cum[hi] - cum[lo] || 1);
-          return { x: pts[lo].x + (pts[hi].x - pts[lo].x) * f, y: pts[lo].y + (pts[hi].y - pts[lo].y) * f };
-        };
-        return { length, at };
-      }
-
       function build() {
         clearWorld();
         const m = measure();
@@ -306,27 +277,37 @@ export default function Sky() {
           scene.add(sun);
         }
 
-        // Plane: a ∞ from just under the nav down to the rooftops.
+        // Plane: one straight climb at 45°, up and to the right. The line runs
+        // through a point just off the headline's top-left corner, so below
+        // the headline's top it stays left of the words. The flight starts and
+        // ends a plane's length outside the hero, so it never pops in or out:
+        // it comes in from the left or bottom edge and leaves by the top or right.
         const planeW = wide ? 56 : 44;
-        const highY = m.navBottom + (wide ? 24 : 18);
-        const lowY = m.groundTop + (wide ? 40 : 28);
-        const path = buildFlightPath(W / 2, (highY + lowY) / 2, W * (wide ? 0.4 : 0.38), (lowY - highY) / 2);
-        // Start partway down the left loop, already facing the way it flies
-        // (starting at a tip would catch it mid-turn).
-        const s0 = path.length * 0.62;
-        const startDir = path.at(s0 + 6).x >= path.at(s0 - 6).x ? 1 : -1;
+        // Below 1024px the headline's box is wider than its centred words, so
+        // aim inside the box: that clears the words and passes between the
+        // wordmark and the sun instead of behind the wordmark.
+        const ax = wide ? m.text.left - 48 : m.text.left + 40;
+        const ay = m.text.top - 8;
+        const out = planeW;
         const plane = {
           pivot: makeSprite("plane", planeW, 1.2, LAYER_PLANE),
           w: planeW,
-          path,
-          s: s0,
-          speed: wide ? 95 : 60, // px per second along the curve
-          dir: startDir, // 1 = nose right, -1 = nose left; eased so the plane banks round
+          // t: px travelled along x from the anchor; y falls as fast as x rises.
+          ax,
+          ay,
+          t0: Math.max(-out - ax, ay - H - out),
+          t1: Math.min(W + out - ax, ay + out),
+          t: 0,
+          rest: 0, // seconds left before the next flight
+          speed: (wide ? 95 : 60) / Math.SQRT2, // 95 / 60 px per second along the climb
           dist: 0,
           dashLen: wide ? 7 : 6,
           dashThick: wide ? 1.5 : 1.3,
           gap: wide ? 13 : 11,
         };
+        // Open on a plane already partway up, rather than an empty sky.
+        plane.t = plane.t0 + (plane.t1 - plane.t0) * 0.35;
+        plane.pivot.rotation.z = Math.PI / 4; // nose up and to the right
         scene.add(plane.pivot);
 
         world = { sun, clouds, plane };
@@ -352,34 +333,27 @@ export default function Sky() {
           }
         }
 
-        // Plane: move along the ∞, face the way it's heading.
-        const before = p.path.at(p.s);
-        p.s += p.speed * dt;
-        const pos = p.path.at(p.s);
-        const ahead = p.path.at(p.s + 6);
-        const behind = p.path.at(p.s - 6);
-        const tx = ahead.x - behind.x;
-        const ty = ahead.y - behind.y;
-        const heading = Math.atan2(ty, tx); // screen angle, y down
+        // Plane: climb along the line; once it's off the edge, wait a moment
+        // (long enough for most of the trail to fade), then start again.
+        if (p.rest > 0) {
+          p.rest -= dt;
+          if (p.rest <= 0) {
+            p.t = p.t0;
+            p.dist = 0;
+          }
+        } else {
+          p.t += p.speed * dt;
+          if (p.t >= p.t1) p.rest = PLANE_REST;
+          const x = p.ax + p.t;
+          const y = p.ay - p.t;
+          p.pivot.position.set(x, -y, 0);
 
-        const targetDir = tx >= 0 ? 1 : -1;
-        p.dir += (targetDir - p.dir) * Math.min(1, dt * 5);
-        const tilt = Math.max(-1.1, Math.min(1.1, Math.atan2(ty, Math.abs(tx))));
-        p.pivot.scale.x = Math.abs(p.dir) < 0.08 ? 0.08 * Math.sign(p.dir || 1) : p.dir;
-        p.pivot.rotation.z = targetDir > 0 ? -tilt : tilt;
-        p.pivot.position.set(pos.x, -pos.y, 0);
-
-        // Drop a dash every `gap` px travelled, just behind the tail.
-        p.dist += Math.hypot(pos.x - before.x, pos.y - before.y);
-        while (p.dist >= p.gap) {
-          p.dist -= p.gap;
-          spawnDash(
-            pos.x - Math.cos(heading) * p.w * 0.55,
-            pos.y - Math.sin(heading) * p.w * 0.55,
-            heading,
-            p.dashLen,
-            p.dashThick
-          );
+          // Drop a dash every `gap` px travelled, just behind the tail.
+          p.dist += p.speed * dt * Math.SQRT2;
+          while (p.dist >= p.gap) {
+            p.dist -= p.gap;
+            spawnDash(x - p.w * 0.55 * Math.SQRT1_2, y + p.w * 0.55 * Math.SQRT1_2, -Math.PI / 4, p.dashLen, p.dashThick);
+          }
         }
 
         for (const d of dashes) {
