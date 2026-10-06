@@ -51,11 +51,33 @@ function clearClaimToken() {
   }
 }
 
+// A link can open the app on a tab: /?view=listings is the landing page's
+// "List your room". Signed out, the tab waits behind sign-up, because the app
+// stays on one page throughout. Read once, when this file loads — StrictMode
+// runs state initialisers twice, and the second run would find the address bar
+// already tidied — then taken out of it, so a reload starts on Find as usual.
+const VIEWS = ["find", "saved", "messages", "listings"];
+
+function readStartView() {
+  try {
+    const url = new URL(window.location.href);
+    const fromUrl = url.searchParams.get("view");
+    if (fromUrl === null) return "find";
+    url.searchParams.delete("view");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+    return VIEWS.includes(fromUrl) ? fromUrl : "find";
+  } catch {
+    return "find";
+  }
+}
+
+const START_VIEW = readStartView();
+
 export default function App() {
   const [session, setSession] = useState(null);
   const [claimToken, setClaimToken] = useState(readClaimToken);
   const [checkingAuth, setCheckingAuth] = useState(true);
-  const [view, setView] = useState("find"); // "find" | "saved" | "listings"
+  const [view, setView] = useState(START_VIEW); // "find" | "saved" | "messages" | "listings"
   const [savedIds, setSavedIds] = useState(() => new Set());
   const [recovering, setRecovering] = useState(false);
   // undefined = not looked up yet, null = no profile row, object = loaded
