@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import Avatar from "./Avatar.jsx";
+import { awaitingHost } from "../supabase.js";
 
 // One ramp, used for both the total score and each factor bar, so the color
 // always means the same thing: how well this piece fits.
@@ -79,6 +80,8 @@ export default function RoomCard({
   overBudget = false, // shown but priced above what they said they can pay
   owner, // the owner's profile, when the room has one
   onMessage, // omitted on your own room, and on ownerless seed rooms
+  onInterested, // a Craigslist room whose host isn't here yet; omitted on your own
+  interestSent = false,
 }) {
   const [open, setOpen] = useState(defaultOpen);
   const [descOpen, setDescOpen] = useState(false); // closed on every card, top match included
@@ -150,8 +153,27 @@ export default function RoomCard({
       </div>
 
       {/* Seed rooms genuinely have no owner, so we say so rather than
-          inventing a persona for them to be messaged. */}
-      {room.owner_id ? (
+          inventing a persona for them to be messaged. A room copied from
+          Craigslist belongs to the admin who imported it until its host
+          claims it, so it shows neither that admin nor a Message button. */}
+      {awaitingHost(room) ? (
+        <div className="owner-row">
+          <span className="owner-pending">Host isn't on RoomFit yet</span>
+          {interestSent ? (
+            <span className="interest-sent">Interest sent ✓</span>
+          ) : (
+            onInterested && (
+              <button
+                type="button"
+                className="linkish owner-msg"
+                onClick={() => onInterested(room)}
+              >
+                I'm interested
+              </button>
+            )
+          )}
+        </div>
+      ) : room.owner_id ? (
         <div className="owner-row">
           <Avatar profile={owner} size={24} />
           <span className="owner-name">

@@ -74,6 +74,19 @@ Don't relitigate these without being asked:
   `RoomForm` — never a value in the database. Don't remove this: without it the
   fastest path through the claim screen publishes the middle of every scale,
   and nothing afterwards can tell that apart from a real answer.
+- **Craigslist rooms take "I'm interested", not messages, until claimed.** A
+  script on Vincent's Mac (`scripts/craigslist-import/`, daily 9:00 PT, Apify
+  `memo23/craigslist-scraper`) imports SF rooms with photos as inactive rooms
+  owned by an import admin (`rooms.source = 'craigslist'`). An outside email
+  bot saves each post's reply address through `report_email()`, which makes the
+  room live. The first "I'm interested" emails the host once, with a claim
+  link; on claim (`rooms.claimed_at`), each interested person's note becomes
+  their own one-to-one thread and they get an email. Emails are rows in
+  `email_outbox`, posted by `pg_net` to the Cloud Run mailer (Gmail as
+  joinroomfitapp@gmail.com; key in Vault); every interest and every claim also
+  emails the team (`team_recipients`). The reply address lives in `room_sources`
+  (admin-only), never on `rooms`. No reminders, and never anything that gets
+  past Craigslist's CAPTCHA.
 - **Hybrid listings.** 12 seed rooms (`owner_id` null) so the app is never
   empty, plus user-submitted rooms on top. Same schema for both.
 - **The fit receipt is the product.** Every result shows its per-factor
@@ -159,12 +172,15 @@ frontend/src/
     Auth.jsx           email + password sign in / sign up
     PreferenceForm.jsx the search form
     RoomCard.jsx       the fit receipt — gauge, gallery, factor bars, heart,
-                       Description toggle (display-only, never scored)
+                       Description toggle (display-only, never scored),
+                       Message or I'm interested
+    InterestSheet.jsx  the "I'm interested" popup (note to the host)
     RoomForm.jsx       add / edit / claim a listing, photo upload, admin fields
     MyListings.jsx     your own rooms: edit, pause, delete; claim screen;
                        admin claim links + share sheet
     SavedRooms.jsx     saved rooms, re-ranked against your last search
-    Messages.jsx       inbox + thread, owns its own back-and-forth
+    Messages.jsx       inbox + thread, owns its own back-and-forth; suggested
+                       first replies for a room's owner
     Avatar.jsx         photo or coloured initials; palette lives here
     ProfileEditor.jsx  the profile sheet (avatar + name)
     NameStep.jsx       one-time "enter your name" after signup
@@ -187,7 +203,15 @@ supabase/              run in numerical order
   12_descriptions.sql  rooms.description (optional, 2,000 chars), carried by claims
   13_waitlist.sql      landing-page waitlist + join_waitlist() (closed table)
   14_waitlist_neighborhoods.sql  up to 3 neighbourhoods per waitlist sign-up
+  15_craigslist.sql    rooms.source/claimed_at, room_interests, email_outbox,
+                       import + email-bot functions, claimed_at on claim
+  16_email_sending.sql pg_net sends the outbox to the mailer, pg_cron syncs
+                       results and retries, team alerts on interest and claim
   undo/                one undo script per migration from 10 on
+scripts/craigslist-import/
+  import.mjs           daily scrape → inactive rooms (no dependencies)
+  EMAIL_BOT.md         instructions the email bot follows
+  README.md            setup, launchd schedule, sending the emails
 render.yaml            backend deploy blueprint
 landing/               landing page (separate Next.js project + its design handoff)
 ```
@@ -243,6 +267,14 @@ landing/               landing page (separate Next.js project + its design hando
 - ✅ **Landing page** — LIVE on joinroomfit.com (www redirects to it), its own
   Vercel project (`roomfit-landing`) deploying `landing/` from `main`. Waitlist
   sign-ups land in the `waitlist` table, verified with a real sign-up.
+- 🟡 **Craigslist import + "I'm interested"** — built on branch
+  `craigslist-import` (Vincent's fork). Migrations 15 and 16 are on the live
+  database, each after a rolled-back dry run (one and many interested people,
+  claims, RLS, sending, retries). Email sending is live and tested. First
+  import done Oct 6: 99 rooms, all hidden, owned by the import admin. **Don't
+  turn on the email bot (or the daily import) until this branch is live on
+  app.joinroomfit.com** — the old app would show those rooms with a Message
+  button to the import admin instead of "I'm interested".
 - ⬜ **Public shareable listings** — specced, not started (the last planned item)
 
 ## Working style

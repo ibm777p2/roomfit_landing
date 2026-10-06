@@ -13,6 +13,15 @@ import Avatar from "./Avatar.jsx";
 
 const firstName = (p) => p?.first_name?.trim() || displayName(p) || "Someone";
 
+// Offered to a room's owner until they've sent their first reply in a thread —
+// most of all to a host who just claimed a room and found people waiting.
+// Tapping one fills the box; nothing is sent until they press Send.
+const OWNER_SUGGESTIONS = [
+  "Hi! Yes, the room is still available. When are you looking to move in?",
+  "Thanks for reaching out! Tell me a bit about yourself: what you do, your schedule, and what you're like at home.",
+  "Would you like to come see the room, or do a quick video call this week?",
+];
+
 function coverOf(room) {
   return room?.photos?.[0] ?? room?.photo_url ?? null;
 }
@@ -277,6 +286,23 @@ function Thread({ me, roomId, otherId, room, person, onBack }) {
       )}
 
       {error && <p className="auth-error">{error}</p>}
+
+      {messages !== null &&
+        room?.owner_id === me &&
+        !messages.some((m) => m.sender_id === me) && (
+          <div className="suggestions" aria-label="Suggested replies">
+            {OWNER_SUGGESTIONS.map((s) => (
+              <button
+                key={s}
+                type="button"
+                className={draft === s ? "suggestion on" : "suggestion"}
+                onClick={() => setDraft(s)}
+              >
+                {s}
+              </button>
+            ))}
+          </div>
+        )}
 
       <div className="composer">
         <textarea
