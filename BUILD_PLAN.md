@@ -193,6 +193,18 @@ So we ask the owner first, and the app carries the rest.
       just published wants a link to post back where they were found.
 - [ ] Live message delivery via Supabase Realtime, and cross-device unread
       using the `read_at` column that's already reserved.
+- [ ] **Rent with cents** (e.g. $1,500.40). Rent is whole dollars everywhere
+      today: `rooms.rent` is `integer`, `Room.rent` is `int` in
+      `backend/models.py`, and the rent box in `RoomForm.jsx` keeps digits
+      only. Needs a migration to `numeric(8,2)`, the backend model, the form,
+      money formatting wherever rent is shown, and the claim functions that
+      copy rent (`11_claims.sql`, `12_descriptions.sql`). Scoring is unchanged.
+- [ ] **Social link on a listing** (optional): a field after Description for
+      the lister's Instagram, Facebook, LinkedIn or similar. Display-only and
+      never scored, like the description. Open question: one link per listing,
+      or on the person's profile so all their listings share it.
+      `06_profiles.sql` already planned social links on profiles, and the
+      public shareable listings item above wants them there.
 
 ## Scoring reference
 
