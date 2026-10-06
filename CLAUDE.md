@@ -58,8 +58,8 @@ Don't relitigate these without being asked:
   (`profiles.role`), set by hand in the Supabase dashboard and never from the
   app (a trigger blocks it). Admins get operator tools — hidden listings,
   original post links, claim links — but still no seeker/lister split.
-- **Claimable listings.** Admins copy a room from another site (with the
-  owner's permission) as an inactive listing, then send a one-time claim link
+- **Claimable listings.** Admins copy a room from another site as an inactive
+  listing, then send a one-time claim link
   (`/?claim=<token>`, 14 days). The owner signs up or in, can edit everything,
   and on Accept becomes the owner and the listing goes live. Claiming happens
   only in the `claim_room` database function; photos are copied into the
@@ -234,7 +234,7 @@ landing/               landing page (separate Next.js project + its design hando
   avatar + first name and a Message button; seed rooms read "Sample listing"
   and aren't messageable.
 - ✅ **Admin role + claimable listings** — LIVE. Admins add hidden listings
-  copied from other sites (with the owner's permission), keep the original post
+  copied from other sites, keep the original post
   link, and send a one-time claim link; the owner claims, edits and publishes.
   Owners can pause listings; admins can include inactive rooms in search.
   Migrations 10–12 are on the live database, and the app merged from
