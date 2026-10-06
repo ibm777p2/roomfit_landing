@@ -9,11 +9,14 @@ import NameStep from "./components/NameStep.jsx";
 import ProfileEditor from "./components/ProfileEditor.jsx";
 import Avatar from "./components/Avatar.jsx";
 import Messages from "./components/Messages.jsx";
+import InterestSheet from "./components/InterestSheet.jsx";
 import { rankRooms, warmUp } from "./api.js";
 import {
   supabase,
   fetchRooms,
   fetchFavouriteIds,
+  fetchMyInterestIds,
+  awaitingHost,
   toggleFavourite,
   fetchMyProfile,
   fetchProfilesByIds,
@@ -79,6 +82,8 @@ export default function App() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [view, setView] = useState(START_VIEW); // "find" | "saved" | "messages" | "listings"
   const [savedIds, setSavedIds] = useState(() => new Set());
+  const [interestIds, setInterestIds] = useState(() => new Set());
+  const [interestRoom, setInterestRoom] = useState(null); // the open "I'm interested" sheet
   const [recovering, setRecovering] = useState(false);
   // undefined = not looked up yet, null = no profile row, object = loaded
   const [profile, setProfile] = useState(undefined);
@@ -126,6 +131,7 @@ export default function App() {
       if (!s) {
         setData(null); // clear results on sign out
         setSavedIds(new Set());
+        setInterestIds(new Set());
       }
       // A pending claim belongs to whoever opened the link, not to the next
       // person to sign in on this device.
@@ -145,6 +151,12 @@ export default function App() {
     let alive = true;
     fetchFavouriteIds()
       .then((ids) => alive && setSavedIds(ids))
+      .catch(() => {});
+    // Which rooms they've already said "I'm interested" to, so the card can say
+    // so. Fails soft the same way: worst case, the button shows again and the
+    // database answers "already".
+    fetchMyInterestIds()
+      .then((ids) => alive && setInterestIds(ids))
       .catch(() => {});
     return () => {
       alive = false;
@@ -289,6 +301,16 @@ export default function App() {
 
   return (
     <main className="app">
+      {interestRoom && (
+        <InterestSheet
+          room={interestRoom}
+          onClose={() => setInterestRoom(null)}
+          onSent={(roomId) =>
+            setInterestIds((prev) => new Set(prev).add(String(roomId)))
+          }
+        />
+      )}
+
       {editingProfile && (
         <ProfileEditor
           profile={profile}
@@ -513,10 +535,18 @@ export default function App() {
                     }
                     owner={owners.get(r.room.owner_id)}
                     onMessage={
-                      r.room.owner_id && r.room.owner_id !== session?.user?.id
+                      r.room.owner_id &&
+                      r.room.owner_id !== session?.user?.id &&
+                      !awaitingHost(r.room)
                         ? handleMessage
                         : undefined
                     }
+                    onInterested={
+                      awaitingHost(r.room) && r.room.owner_id !== session?.user?.id
+                        ? setInterestRoom
+                        : undefined
+                    }
+                    interestSent={interestIds.has(String(r.room.id))}
                     // no heart on your own listing — you can't save yourself
                     onToggleSave={
                       r.room.owner_id && r.room.owner_id === session?.user?.id
