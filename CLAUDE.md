@@ -87,6 +87,11 @@ Don't relitigate these without being asked:
   emails the team (`team_recipients`). The reply address lives in `room_sources`
   (admin-only), never on `rooms`. No reminders, and never anything that gets
   past Craigslist's CAPTCHA.
+- **Listings last 30 days.** `rooms.expires_at` is set by the database (30
+  days from posting, and again from a claim), never by the app. A daily job
+  (17:00 UTC) pauses expired listings and emails the owner; "Show again" on an
+  expired listing renews it for 30 days. Sample rooms and unclaimed Craigslist
+  imports have no expiry. Nothing is ever deleted for expiring.
 - **Hybrid listings.** 12 seed rooms (`owner_id` null) so the app is never
   empty, plus user-submitted rooms on top. Same schema for both.
 - **The fit receipt is the product.** Every result shows its per-factor
@@ -207,6 +212,7 @@ supabase/              run in numerical order
                        import + email-bot functions, claimed_at on claim
   16_email_sending.sql pg_net sends the outbox to the mailer, pg_cron syncs
                        results and retries, team alerts on interest and claim
+  17_listing_expiry.sql  rooms.expires_at, 30-day listings, daily pause + email
   undo/                one undo script per migration from 10 on
 scripts/craigslist-import/
   import.mjs           daily scrape → inactive rooms (no dependencies)
