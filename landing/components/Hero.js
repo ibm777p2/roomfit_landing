@@ -1,6 +1,5 @@
 import Sky from "./Sky";
-import JoinLink from "./JoinLink";
-import { APP_URL } from "@/lib/content";
+import { APP_URL, LIST_ROOM_URL } from "@/lib/content";
 import styles from "./Hero.module.css";
 
 // The sky (sun, clouds, plane) is drawn twice on purpose:
@@ -82,9 +81,11 @@ export default function Hero() {
             <span>with the reason for every score.</span>
           </p>
           <div className={styles.actions}>
-            <JoinLink className={`btn ${styles.primary}`}>Join roomfit</JoinLink>
-            <a className={`textlink ${styles.demo}`} href={APP_URL}>
-              Try the demo →
+            <a className={`btn ${styles.primary}`} href={APP_URL}>
+              Try it free
+            </a>
+            <a className={`textlink ${styles.demo}`} href={LIST_ROOM_URL}>
+              List your room →
             </a>
           </div>
         </div>

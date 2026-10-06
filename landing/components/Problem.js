@@ -1,6 +1,6 @@
 import Image from "next/image";
-import JoinLink from "./JoinLink";
 import CountUp from "./CountUp";
+import { APP_URL } from "@/lib/content";
 import styles from "./Problem.module.css";
 
 // Two rows, zigzag on wide screens: the seeker's problem, then the lister's.
@@ -23,9 +23,9 @@ export default function Problem() {
               A one-bedroom in SF runs $3,750, so most of us share, and every listing is a stranger
               you have to guess about.
             </p>
-            <JoinLink role="looking" className={`btn ${styles.cta}`}>
+            <a className={`btn ${styles.cta}`} href={APP_URL}>
               Find a room that fits
-            </JoinLink>
+            </a>
           </div>
 
           <div className={`${styles.visual} ${styles.visualSeeker}`}>
@@ -69,9 +69,9 @@ export default function Problem() {
               It took me 4–5 weeks to find a replacement, and whoever I found still had to pass the
               landlord and the housemates.
             </p>
-            <JoinLink role="listing" className={`btn ${styles.cta}`}>
+            <a className={`btn ${styles.cta}`} href={APP_URL}>
               List your room
-            </JoinLink>
+            </a>
           </div>
 
           <div className={`${styles.visual} ${styles.visualLister}`}>

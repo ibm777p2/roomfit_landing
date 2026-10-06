@@ -3,6 +3,9 @@
 // hard-coding copy.
 
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL || "https://app.joinroomfit.com";
+// The app opened on its My listings tab. A query, not a path: the app is a
+// single page, and app.joinroomfit.com/listings would be a 404.
+export const LIST_ROOM_URL = `${APP_URL}/?view=listings`;
 export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://joinroomfit.com";
 
 // The pills on the join form. "Somewhere else" catches everyone outside these,

@@ -168,6 +168,11 @@ p {
   border: 0;
 }
 
+/* <CountUp/>'s visible number: drawn from data-value so it isn't page text */
+.countUp::after {
+  content: attr(data-value);
+}
+
 /* ---------- scroll reveal ----------
    components/Reveal.js adds .isIn when an element scrolls into view.
    Without JavaScript nothing is hidden: the hidden state only applies once

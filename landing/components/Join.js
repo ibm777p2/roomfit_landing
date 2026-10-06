@@ -2,7 +2,6 @@
 
 import { useActionState, useEffect, useRef, useState } from "react";
 import { joinWaitlist } from "@/app/actions";
-import { ROLE_EVENT } from "./JoinLink";
 import { NEIGHBORHOODS, ELSEWHERE, MAX_NEIGHBORHOODS, ROLES, SITE_URL } from "@/lib/content";
 import styles from "./Join.module.css";
 
@@ -25,15 +24,11 @@ export default function Join() {
   const [state, formAction, pending] = useActionState(joinWaitlist, { status: "idle" });
   const successRef = useRef(null);
 
-  // "Find a room that fits" / "List your room" pick the role on their way here,
-  // and so does a link like /?role=listing#join.
+  // A link like /?role=listing#join picks the role on its way here.
   useEffect(() => {
-    const onRole = (e) => setRole(ROLE_ALIASES[e.detail] || e.detail);
-    window.addEventListener(ROLE_EVENT, onRole);
     const fromUrl = new URLSearchParams(window.location.search).get("role");
     const r = ROLE_ALIASES[fromUrl] || fromUrl;
     if (ROLES.some((x) => x.value === r)) setRole(r);
-    return () => window.removeEventListener(ROLE_EVENT, onRole);
   }, []);
 
   useEffect(() => {
@@ -58,7 +53,7 @@ export default function Join() {
     <section id="join" className={styles.section} aria-labelledby="join-title">
       <div className={`wrap ${styles.grid}`}>
         <div className={`${styles.intro} reveal`}>
-          <h2 id="join-title" className={styles.title} tabIndex={-1} data-join-focus>
+          <h2 id="join-title" className={styles.title} tabIndex={-1}>
             Bring roomfit to your neighborhood.
           </h2>
           <p className={styles.sub}>

@@ -5,6 +5,10 @@ import { useEffect, useRef, useState } from "react";
 // Counts from 0 to `to` the first time it scrolls into view. Server-renders
 // the final number, so without JavaScript (or with reduced motion) it simply
 // reads "250+".
+//
+// The page text holds the number once, in the screen-reader copy. The number
+// you see is drawn by CSS from data-value (.countUp in globals.css), so search
+// engines and copy-paste don't read "250+250+".
 export default function CountUp({ to, suffix = "", duration = 1200 }) {
   const ref = useRef(null);
   const [value, setValue] = useState(to);
@@ -46,10 +50,7 @@ export default function CountUp({ to, suffix = "", duration = 1200 }) {
         {to}
         {suffix}
       </span>
-      <span aria-hidden="true">
-        {value}
-        {suffix}
-      </span>
+      <span aria-hidden="true" className="countUp" data-value={`${value}${suffix}`} />
     </span>
   );
 }

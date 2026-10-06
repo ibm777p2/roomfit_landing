@@ -114,8 +114,8 @@ Landing-only values seen in the export (derived, keep as tokens if used): `--pap
 - Nav: roomfit wordmark (left) · Try the demo · Join (right)
 - Headline (Garamond): Find a room that *fits*.
 - Subline: Rooms ranked by how you actually live — with the reason for every score.
-- Primary button: **Join roomfit** → `#join`
-- Secondary link: **Try the demo →** → `https://app.joinroomfit.com`
+- Primary button: **Try it free** → `https://app.joinroomfit.com`
+- Secondary link: **List your room →** → `https://app.joinroomfit.com/?view=listings` (opens My listings)
 
 **Motion** — plane crosses slowly (~25s, loops); clouds drift at different slow speeds; sun rotates or glows gently; optional skyline draw-in on load (1–2s). Reduced motion: static.
 
@@ -133,14 +133,14 @@ Zigzag rows; mobile stacks text then visual. Visual: circular-cropped room photo
   - Another · 101K members · 20+ posts a day
 - Footnote: Public SF housing groups, Sept 2026
 - Chips (mono numbers, ink — not ramp colours): $3,750 one-bedroom · 250+ posts a day · 2% vacancy
-- Button: **Find a room that fits** → `#join?role=seeker`
+- Button: **Find a room that fits** → `https://app.joinroomfit.com`
 
 ### Row 2 — Lister
 - Headline: An empty room means paying two rents.
 - Body: It took me 4–5 weeks to find a replacement — and whoever I found still had to pass the landlord and the housemates.
 - Card: a single room listing
 - Chip: 4–5 weeks to fill a room
-- Button: **List your room** → `#join?role=lister`
+- Button: **List your room** → `https://app.joinroomfit.com`
 
 **Rules:** never name specific Facebook groups; no Facebook logo, blue or lookalike UI; stats carry a source + date.
 
