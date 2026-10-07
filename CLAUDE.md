@@ -213,6 +213,7 @@ supabase/              run in numerical order
   16_email_sending.sql pg_net sends the outbox to the mailer, pg_cron syncs
                        results and retries, team alerts on interest and claim
   17_listing_expiry.sql  rooms.expires_at, 30-day listings, daily pause + email
+  18_import_cleanup_fixes.sql  rejected_imports; cleanup waits for open claim links
   undo/                one undo script per migration from 10 on
 scripts/craigslist-import/
   import.mjs           daily scrape → inactive rooms (no dependencies)
